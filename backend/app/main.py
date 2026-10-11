@@ -56,13 +56,25 @@ app.add_middleware(
 # Error handlers conforming to API_SPEC.md standard error envelope
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    detail = exc.detail
+    if isinstance(detail, dict):
+        payload = detail
+        code = payload.get("code", f"HTTP_{exc.status_code}")
+        message = payload.get("message") or "Request failed."
+        details = payload.get("details", [])
+    else:
+        payload = {"code": f"HTTP_{exc.status_code}", "message": str(detail), "details": []}
+        code = payload["code"]
+        message = payload["message"]
+        details = payload["details"]
+
     return JSONResponse(
         status_code=exc.status_code,
         content={
             "error": {
-                "code": f"HTTP_{exc.status_code}",
-                "message": str(exc.detail),
-                "details": [],
+                "code": code,
+                "message": message,
+                "details": details,
             }
         },
     )

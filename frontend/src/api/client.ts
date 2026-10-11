@@ -1,6 +1,34 @@
 import type { HealthResponse, ApiErrorResponse } from '../types';
 import type { AuthTokenResponse, Trial, TrialListResponse } from '../types/trials';
 
+export interface CsvPreviewRow {
+  participant_id: string;
+  status: string;
+  visits_completed?: number | null;
+  visits_planned?: number | null;
+  enrollment_date?: string | null;
+  last_visit_date?: string | null;
+  next_visit_due_date?: string | null;
+}
+
+export interface CsvPreviewResponse {
+  total_rows: number;
+  valid_rows: number;
+  invalid_rows: number;
+  errors: string[];
+  preview: CsvPreviewRow[];
+}
+
+export interface CsvImportResponse {
+  trial_id: string;
+  imported_count: number;
+  total_rows: number;
+  valid_rows: number;
+  invalid_rows: number;
+  errors: string[];
+  preview: CsvPreviewRow[];
+}
+
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -98,4 +126,23 @@ export const api = {
       },
       body: JSON.stringify(payload),
     }),
+  previewParticipants: (trialId: string, file: File): Promise<CsvPreviewResponse> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return apiRequest<CsvPreviewResponse>(`/api/trials/${trialId}/participants/preview`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
+  importParticipants: (trialId: string, file: File, confirmed = true): Promise<CsvImportResponse> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('confirm', String(confirmed));
+
+    return apiRequest<CsvImportResponse>(`/api/trials/${trialId}/participants/import`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
 };

@@ -4,6 +4,7 @@ import { Shell } from './components/layout/Shell';
 import { StatusPage } from './pages/StatusPage';
 import { TrialsPage } from './pages/TrialsPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { ImportPage } from './pages/ImportPage';
 
 export const App: React.FC = () => {
   return (
@@ -14,23 +15,7 @@ export const App: React.FC = () => {
 
           <Route path="trials" element={<TrialsPage />} />
 
-          <Route
-            path="import"
-            element={
-              <PlaceholderPage
-                title="CSV Upload, Validation & Preview"
-                description="Stateless CSV ingestion with schema validation, line-level error reporting, and transactional import."
-                phase="Phase 3"
-                acceptanceCriteria={[
-                  'AC-020: Valid CSV can be previewed before import.',
-                  'AC-021: Missing columns, invalid statuses, malformed dates, and duplicates report exact line numbers.',
-                  'AC-022: Server enforces 10MB upload and 10,000 row limits.',
-                  'AC-023: Import requires explicit user confirmation before writing to database.',
-                  'AC-024: Failed imports roll back without leaving partial orphan records.',
-                ]}
-              />
-            }
-          />
+          <Route path="import" element={<ImportPage />} />
 
           <Route
             path="dashboard"

@@ -1,23 +1,29 @@
 """Trial management API endpoints."""
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from backend.app.db.session import get_db
+from backend.app.models.trial import Trial
 from backend.app.models.user import User
+from backend.app.schemas.participant import (
+    ParticipantImportResponse,
+    ParticipantPreviewResponse,
+)
 from backend.app.schemas.trial import (
     TrialCreate,
     TrialUpdate,
     TrialResponse,
     TrialListResponse,
 )
+from backend.app.services.participant_service import import_participants, preview_participants
 from backend.app.services.trial_service import (
     create_trial,
     list_trials,
     get_trial,
     update_trial,
 )
-from backend.app.api.deps import get_current_user
+from backend.app.api.deps import get_current_user, require_trial_ownership
 
 router = APIRouter(prefix="/trials", tags=["Trials"])
 
@@ -97,3 +103,51 @@ def update_trial_endpoint(
     """
     trial = update_trial(db=db, trial_id=trial_id, owner=current_user, payload=payload)
     return TrialResponse.from_orm_with_count(trial)
+
+
+@router.post(
+    "/{trial_id}/participants/preview",
+    response_model=ParticipantPreviewResponse,
+    summary="Validate a CSV file and return a preview without saving participants",
+)
+async def preview_participants_endpoint(
+    trial_id: str,
+    file: UploadFile = File(...),
+    trial: Trial = Depends(require_trial_ownership),
+    db: Session = Depends(get_db),
+) -> ParticipantPreviewResponse:
+    """Preview a CSV upload for participant validation without writing to the database."""
+    result = await preview_participants(file=file, db=db, trial_id=trial_id)
+    return ParticipantPreviewResponse(
+        total_rows=result["total_rows"],
+        valid_rows=result["valid_rows"],
+        invalid_rows=result["invalid_rows"],
+        errors=result["errors"],
+        preview=result["preview"],
+    )
+
+
+@router.post(
+    "/{trial_id}/participants/import",
+    response_model=ParticipantImportResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Validate and import participants after explicit confirmation",
+)
+async def import_participants_endpoint(
+    trial_id: str,
+    file: UploadFile = File(...),
+    confirm: bool = Form(False),
+    trial: Trial = Depends(require_trial_ownership),
+    db: Session = Depends(get_db),
+) -> ParticipantImportResponse:
+    """Import a CSV only after explicit confirmation and server-side validation has passed."""
+    result = await import_participants(file=file, db=db, trial_id=trial_id, confirmed=confirm)
+    return ParticipantImportResponse(
+        trial_id=result["trial_id"],
+        imported_count=result["imported_count"],
+        total_rows=result["total_rows"],
+        valid_rows=result["valid_rows"],
+        invalid_rows=result["invalid_rows"],
+        errors=result["errors"],
+        preview=result["preview"],
+    )
