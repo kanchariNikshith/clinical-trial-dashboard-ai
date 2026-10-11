@@ -1,0 +1,5 @@
+participant_id,status,visits_completed,visits_planned,enrollment_date,last_visit_date,next_visit_due_date
+SYN-001,completed,8,8,2026-01-02,2026-04-10,
+SYN-002,active,3,8,2026-01-05,2026-03-20,2026-04-15
+SYN-003,withdrawn,2,8,2026-01-07,2026-02-12,
+SYN-004,active,4,8,2026-01-09,2026-03-25,2026-04-18
