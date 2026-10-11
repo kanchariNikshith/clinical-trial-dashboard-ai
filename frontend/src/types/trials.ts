@@ -1,0 +1,30 @@
+export interface Trial {
+  id: string;
+  owner_user_id: string;
+  trial_code: string;
+  trial_name: string;
+  status: 'active' | 'paused' | 'completed' | 'cancelled';
+  start_date?: string | null;
+  end_date?: string | null;
+  participant_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TrialListResponse {
+  trials: Trial[];
+  total: number;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface AuthTokenResponse {
+  access_token: string;
+  token_type: string;
+  user: AuthUser;
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Shell } from './components/layout/Shell';
 import { StatusPage } from './pages/StatusPage';
+import { TrialsPage } from './pages/TrialsPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 
 export const App: React.FC = () => {
@@ -11,21 +12,7 @@ export const App: React.FC = () => {
         <Route path="/" element={<Shell />}>
           <Route index element={<StatusPage />} />
 
-          <Route
-            path="trials"
-            element={
-              <PlaceholderPage
-                title="Trial Management & Study Overview"
-                description="Create, browse, and organize clinical study portfolios with ownership verification."
-                phase="Phase 2"
-                acceptanceCriteria={[
-                  'AC-010: Authenticated users can create and list their trials.',
-                  'AC-011: Duplicate trial codes for the same owner are rejected with 409 conflict.',
-                  'AC-012: Invalid date ranges (end_date < start_date) are rejected with clear errors.',
-                ]}
-              />
-            }
-          />
+          <Route path="trials" element={<TrialsPage />} />
 
           <Route
             path="import"

@@ -70,18 +70,24 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException) 
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    errors = []
+    errors: list[str] = []
+    first_message = "Request schema validation failed."
+
     for err in exc.errors():
         loc = " -> ".join(str(l) for l in err.get("loc", []))
         msg = err.get("msg", "Validation error")
-        errors.append(f"{loc}: {msg}")
+        normalized_msg = msg.replace("Value error, ", "").replace("Assertion failed, ", "")
+        details = f"{loc}: {normalized_msg}" if loc else normalized_msg
+        errors.append(details)
+        if first_message == "Request schema validation failed.":
+            first_message = normalized_msg
+
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-
         content={
             "error": {
                 "code": "VALIDATION_ERROR",
-                "message": "Request schema validation failed.",
+                "message": first_message,
                 "details": errors,
             }
         },

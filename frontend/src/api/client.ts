@@ -1,5 +1,5 @@
 import type { HealthResponse, ApiErrorResponse } from '../types';
-
+import type { AuthTokenResponse, Trial, TrialListResponse } from '../types/trials';
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -67,4 +67,35 @@ export const api = {
   getHealth: (): Promise<HealthResponse> => apiRequest<HealthResponse>('/health'),
   getApiHealth: (): Promise<HealthResponse> => apiRequest<HealthResponse>('/api/health'),
   getRootStatus: (): Promise<{ app: string; status: string }> => apiRequest('/'),
+  register: (email: string, password: string): Promise<AuthTokenResponse> =>
+    apiRequest<AuthTokenResponse>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
+  login: (email: string, password: string): Promise<AuthTokenResponse> =>
+    apiRequest<AuthTokenResponse>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
+  getTrials: (token?: string): Promise<TrialListResponse> =>
+    apiRequest<TrialListResponse>('/api/trials', {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }),
+  createTrial: (
+    token: string,
+    payload: {
+      trial_code: string;
+      trial_name: string;
+      status: string;
+      start_date?: string;
+      end_date?: string;
+    }
+  ): Promise<Trial> =>
+    apiRequest<Trial>('/api/trials', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    }),
 };
