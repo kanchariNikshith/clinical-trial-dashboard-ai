@@ -10,6 +10,7 @@ from backend.app.db.base import Base
 if TYPE_CHECKING:
     from backend.app.models.trial import Trial
     from backend.app.models.audit_event import AuditEvent
+    from backend.app.models.refresh_token import RefreshToken
 
 
 class User(Base):
@@ -40,6 +41,9 @@ class User(Base):
     )
     audit_events: Mapped[List["AuditEvent"]] = relationship(
         "AuditEvent", back_populates="actor"
+    )
+    refresh_tokens: Mapped[List["RefreshToken"]] = relationship(
+        "RefreshToken", back_populates="user", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

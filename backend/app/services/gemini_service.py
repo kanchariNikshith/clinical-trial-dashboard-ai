@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from backend.app.core.config import settings
+from backend.app.core import config as app_config
 from backend.app.schemas.ai import AIInsightTopic
 
 try:
@@ -40,6 +40,25 @@ TOPIC_QUESTIONS = {
     AIInsightTopic.WITHDRAWALS: "Summarize withdrawal activity based on withdrawn counts, withdrawal rate, and any operational caution indicated by the metrics.",
     AIInsightTopic.PARTICIPANT_STATUS_DISTRIBUTION: "Summarize the participant status distribution across active, completed, and withdrawn counts without referencing any participant identifiers.",
 }
+
+
+def _get_settings() -> Any:
+    """Return the live application settings instance, avoiding stale module-level copies."""
+    return app_config.settings
+
+
+def ensure_gemini_configured() -> None:
+    """Validate the configured provider state before making a request to Gemini."""
+    settings = _get_settings()
+    api_key = (settings.GEMINI_API_KEY or "").strip()
+    model_name = (settings.GEMINI_MODEL or "").strip()
+
+    if not api_key:
+        raise GeminiConfigurationError("The Gemini API key is not configured.")
+    if not model_name:
+        raise GeminiConfigurationError("The Gemini model is not configured.")
+    if genai is None:
+        raise GeminiConfigurationError("The Google GenAI SDK is not available.")
 
 
 def build_ai_prompt(metrics: dict[str, Any], topic: AIInsightTopic | str | None = None) -> str:
@@ -86,11 +105,9 @@ def build_ai_prompt(metrics: dict[str, Any], topic: AIInsightTopic | str | None 
 
 async def generate_ai_insight(prompt: str) -> dict[str, Any]:
     """Generate an AI summary using the configured Gemini model."""
+    settings = _get_settings()
+    ensure_gemini_configured()
     api_key = (settings.GEMINI_API_KEY or "").strip()
-    if not api_key:
-        raise GeminiConfigurationError("The Gemini API key is not configured.")
-    if genai is None:
-        raise GeminiConfigurationError("The Google GenAI SDK is not available.")
 
     try:
         client = genai.Client(api_key=api_key)

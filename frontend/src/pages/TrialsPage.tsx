@@ -11,26 +11,12 @@ const emptyForm = {
   end_date: '',
 };
 
-const getStoredSession = (): { token: string; user: AuthTokenResponse['user'] } | null => {
-  const token = localStorage.getItem('access_token');
-  const userRaw = localStorage.getItem('auth_user');
-
-  if (!token || !userRaw) {
-    return null;
-  }
-
-  try {
-    const user = JSON.parse(userRaw) as AuthTokenResponse['user'];
-    return { token, user };
-  } catch {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('auth_user');
-    return null;
-  }
-};
-
 export const TrialsPage: React.FC = () => {
-  const storedSession = useMemo(() => getStoredSession(), []);
+  const storedSession = useMemo(() => {
+    const token = api.getAccessToken();
+    const user = api.getCurrentUser();
+    return token && user ? { token, user } : null;
+  }, []);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
   const [authForm, setAuthForm] = useState({ email: 'researcher@example.com', password: 'Password123!' });
   const [session, setSession] = useState<{ token: string; user: AuthTokenResponse['user'] } | null>(storedSession);
@@ -77,8 +63,8 @@ export const TrialsPage: React.FC = () => {
           ? await api.register(authForm.email, authForm.password)
           : await api.login(authForm.email, authForm.password);
 
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('auth_user', JSON.stringify(response.user));
+      api.setAccessToken(response.access_token);
+      api.setCurrentUser(response.user);
       setSession({ token: response.access_token, user: response.user });
       setSuccess(
         authMode === 'register'
@@ -123,8 +109,7 @@ export const TrialsPage: React.FC = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('auth_user');
+    api.clearSession();
     setSession(null);
     setTrials([]);
     setSuccess('Signed out.');

@@ -4,6 +4,9 @@ import uuid
 
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import create_engine, text
+
+from backend.app.core.config import settings
 
 from backend.app.models.participant import Participant
 
@@ -145,21 +148,41 @@ async def test_inconsistent_status_counts_raise_data_quality_warning(async_clien
     )
     trial_id = trial.json()["id"]
 
-    db_session.add_all(
-        [
-            Participant(trial_id=trial_id, participant_id="P-001", status="completed"),
-            Participant(trial_id=trial_id, participant_id="P-002", status="active"),
-            Participant(trial_id=trial_id, participant_id="P-003", status="paused"),
-        ]
-    )
-    db_session.commit()
+    engine = create_engine(settings.effective_database_url)
+    try:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE participants DROP CONSTRAINT IF EXISTS ck_participants_status_valid"))
+            connection.execute(
+                text(
+                    "INSERT INTO participants (id, trial_id, participant_id, status, created_at, updated_at) "
+                    "VALUES (:id, :trial_id, :participant_id, :status, NOW(), NOW())"
+                ),
+                {
+                    "id": str(uuid.uuid4()),
+                    "trial_id": trial_id,
+                    "participant_id": "P-003",
+                    "status": "paused",
+                },
+            )
 
-    response = await async_client.get(f"/api/trials/{trial_id}/metrics", headers=headers)
-    assert response.status_code == 200
-    payload = response.json()
+        db_session.add_all(
+            [
+                Participant(trial_id=trial_id, participant_id="P-001", status="completed"),
+                Participant(trial_id=trial_id, participant_id="P-002", status="active"),
+            ]
+        )
+        db_session.commit()
 
-    assert payload["data_quality"]["status_counts_reconcile"] is False
-    assert "warning" in payload["data_quality"]["warning"].lower()
+        response = await async_client.get(f"/api/trials/{trial_id}/metrics", headers=headers)
+        assert response.status_code == 200
+        payload = response.json()
+
+        assert payload["data_quality"]["status_counts_reconcile"] is False
+        assert "warning" in payload["data_quality"]["warning"].lower()
+    finally:
+        with engine.begin() as connection:
+            connection.execute(text("DELETE FROM participants WHERE trial_id = :trial_id AND participant_id = 'P-003'"), {"trial_id": trial_id})
+            connection.execute(text("ALTER TABLE participants ADD CONSTRAINT ck_participants_status_valid CHECK (status IN ('active', 'completed', 'withdrawn'))"))
 
 
 @pytest.mark.asyncio

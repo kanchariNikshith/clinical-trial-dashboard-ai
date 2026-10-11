@@ -22,6 +22,7 @@ from backend.app.services import gemini_service
 from backend.app.services.audit_service import ACTION_AI_ANALYSIS, record_audit_event
 from backend.app.services.metrics_service import get_trial_metrics
 from backend.app.services.participant_service import import_participants, preview_participants
+from backend.app.services import dataset_service
 from backend.app.services.trial_service import (
     create_trial,
     list_trials,
@@ -143,6 +144,7 @@ async def generate_trial_ai_analysis_endpoint(
     prompt = gemini_service.build_ai_prompt(metrics=metrics, topic=payload.topic)
 
     try:
+        gemini_service.ensure_gemini_configured()
         result = await gemini_service.generate_ai_insight(prompt)
     except gemini_service.GeminiConfigurationError as exc:
         record_audit_event(
@@ -342,6 +344,50 @@ async def preview_participants_endpoint(
         errors=result["errors"],
         preview=result["preview"],
     )
+
+
+@router.post(
+    "/{trial_id}/datasets/preview",
+    summary="Profile an uploaded dataset CSV and detect dataset type without persisting",
+)
+async def preview_dataset_endpoint(
+    trial_id: str,
+    file: UploadFile = File(...),
+    trial: Trial = Depends(require_trial_ownership),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Return a dataset profile and deterministic dataset-type classification.
+
+    If the classifier detects a participant roster, the response will include the
+    participant preview structure for backward compatibility. Other dataset types
+    are profiled and classified but not persisted.
+    """
+    # Read bytes once and use independent in-memory file-like objects so
+    # downstream services don't interfere by consuming the stream.
+    if hasattr(file, "read"):
+        content = await file.read()
+    else:
+        content = b""
+
+    import io as _io
+
+    profiling_file = type("F", (), {"filename": file.filename, "file": _io.BytesIO(content)})()
+    profile = dataset_service.profile_csv(profiling_file)
+    classification = dataset_service.classify_dataset(profile)
+
+    response: dict = {"profile": profile, "classification": classification}
+
+    # If participant roster, include participant preview details using existing service
+    if classification.get("type") == "participant_roster":
+        try:
+            preview_file = type("F", (), {"filename": file.filename, "file": _io.BytesIO(content)})()
+            preview = await preview_participants(file=preview_file, db=db, trial_id=trial_id)
+            response["participant_preview"] = preview
+        except Exception as exc:
+            # If participant preview fails, include the error details but don't block the profile response.
+            response["participant_preview"] = {"error": str(exc)}
+
+    return response
 
 
 @router.post(

@@ -43,6 +43,20 @@ body {
   min-height: 100vh;
 }
 
+.import-page,
+.import-page * {
+  color: #0f172a;
+}
+
+.import-page select,
+.import-page input,
+.import-page option,
+.import-page textarea {
+  background-color: #fff;
+  color: #0f172a;
+  color-scheme: light;
+}
+
 /* App Shell Layout */
 .app-layout {
   display: flex;

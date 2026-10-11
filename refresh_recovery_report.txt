@@ -1,0 +1,1223 @@
+
+================================================================================
+FILE: backend\app\models\__pycache__\refresh_token.cpython-312.pyc
+
+CODE: <module>
+Names: ('__doc__', 'uuid', 'datetime', 'timezone', 'typing', 'Optional', 'TYPE_CHECKING', 'sqlalchemy', 'DateTime', 'ForeignKey', 'String', 'sqlalchemy.orm', 'Mapped', 'mapped_column', 'relationship', 'backend.app.db.base', 'Base', 'backend.app.models.user', 'User', 'RefreshToken')
+Constants: ('Refresh token database model for rotating browser sessions.', 0, None, ('datetime', 'timezone'), ('Optional', 'TYPE_CHECKING'), ('DateTime', 'ForeignKey', 'String'), ('Mapped', 'mapped_column', 'relationship'), ('Base',), ('User',), <code object RefreshToken at 0x0000024F8395DDD0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 16>, 'RefreshToken')
+  0           0 RESUME                   0
+
+  1           2 LOAD_CONST               0 ('Refresh token database model for rotating browser sessions.')
+              4 STORE_NAME               0 (__doc__)
+
+  3           6 LOAD_CONST               1 (0)
+              8 LOAD_CONST               2 (None)
+             10 IMPORT_NAME              1 (uuid)
+             12 STORE_NAME               1 (uuid)
+
+  4          14 LOAD_CONST               1 (0)
+             16 LOAD_CONST               3 (('datetime', 'timezone'))
+             18 IMPORT_NAME              2 (datetime)
+             20 IMPORT_FROM              2 (datetime)
+             22 STORE_NAME               2 (datetime)
+             24 IMPORT_FROM              3 (timezone)
+             26 STORE_NAME               3 (timezone)
+             28 POP_TOP
+
+  5          30 LOAD_CONST               1 (0)
+             32 LOAD_CONST               4 (('Optional', 'TYPE_CHECKING'))
+             34 IMPORT_NAME              4 (typing)
+             36 IMPORT_FROM              5 (Optional)
+             38 STORE_NAME               5 (Optional)
+             40 IMPORT_FROM              6 (TYPE_CHECKING)
+             42 STORE_NAME               6 (TYPE_CHECKING)
+             44 POP_TOP
+
+  7          46 LOAD_CONST               1 (0)
+             48 LOAD_CONST               5 (('DateTime', 'ForeignKey', 'String'))
+             50 IMPORT_NAME              7 (sqlalchemy)
+             52 IMPORT_FROM              8 (DateTime)
+             54 STORE_NAME               8 (DateTime)
+             56 IMPORT_FROM              9 (ForeignKey)
+             58 STORE_NAME               9 (ForeignKey)
+             60 IMPORT_FROM             10 (String)
+             62 STORE_NAME              10 (String)
+             64 POP_TOP
+
+  8          66 LOAD_CONST               1 (0)
+             68 LOAD_CONST               6 (('Mapped', 'mapped_column', 'relationship'))
+             70 IMPORT_NAME             11 (sqlalchemy.orm)
+             72 IMPORT_FROM             12 (Mapped)
+             74 STORE_NAME              12 (Mapped)
+             76 IMPORT_FROM             13 (mapped_column)
+             78 STORE_NAME              13 (mapped_column)
+             80 IMPORT_FROM             14 (relationship)
+             82 STORE_NAME              14 (relationship)
+             84 POP_TOP
+
+ 10          86 LOAD_CONST               1 (0)
+             88 LOAD_CONST               7 (('Base',))
+             90 IMPORT_NAME             15 (backend.app.db.base)
+             92 IMPORT_FROM             16 (Base)
+             94 STORE_NAME              16 (Base)
+             96 POP_TOP
+
+ 12          98 LOAD_NAME                6 (TYPE_CHECKING)
+            100 POP_JUMP_IF_FALSE        6 (to 114)
+
+ 13         102 LOAD_CONST               1 (0)
+            104 LOAD_CONST               8 (('User',))
+            106 IMPORT_NAME             17 (backend.app.models.user)
+            108 IMPORT_FROM             18 (User)
+            110 STORE_NAME              18 (User)
+            112 POP_TOP
+
+ 16     >>  114 PUSH_NULL
+            116 LOAD_BUILD_CLASS
+            118 LOAD_CONST               9 (<code object RefreshToken at 0x0000024F8395DDD0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 16>)
+            120 MAKE_FUNCTION            0
+            122 LOAD_CONST              10 ('RefreshToken')
+            124 LOAD_NAME               16 (Base)
+            126 CALL                     3
+            134 STORE_NAME              19 (RefreshToken)
+            136 RETURN_CONST             2 (None)
+
+  CODE: RefreshToken
+  Names: ('__name__', '__module__', '__qualname__', '__tablename__', 'mapped_column', 'String', 'id', 'Mapped', 'str', '__annotations__', 'ForeignKey', 'user_id', 'token_hash', 'family_id', 'DateTime', 'created_at', 'datetime', 'expires_at', 'revoked_at', 'Optional', 'replaced_by_token_id', 'last_used_at', 'relationship', 'user', '__repr__')
+  Constants: ('RefreshToken', 'refresh_tokens', 36, True, <code object <lambda> at 0x0000024F839F2730, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 20>, ('primary_key', 'default'), 'id', 'users.id', 'CASCADE', ('ondelete',), False, ('nullable', 'index'), 'user_id', 128, ('unique', 'index', 'nullable'), 'token_hash', 'family_id', ('timezone',), <code object <lambda> at 0x0000024F83A7EBC0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 30>, ('default', 'nullable'), 'created_at', 'expires_at', 'revoked_at', ('nullable',), 'replaced_by_token_id', 'last_used_at', 'User', ('back_populates',), 'user', 'return', <code object __repr__ at 0x0000024F83A3F510, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 47>, None)
+ 16           0 RESUME                   0
+              2 LOAD_NAME                0 (__name__)
+              4 STORE_NAME               1 (__module__)
+              6 LOAD_CONST               0 ('RefreshToken')
+              8 STORE_NAME               2 (__qualname__)
+             10 SETUP_ANNOTATIONS
+
+ 17          12 LOAD_CONST               1 ('refresh_tokens')
+             14 STORE_NAME               3 (__tablename__)
+
+ 19          16 PUSH_NULL
+             18 LOAD_NAME                4 (mapped_column)
+
+ 20          20 PUSH_NULL
+             22 LOAD_NAME                5 (String)
+             24 LOAD_CONST               2 (36)
+             26 CALL                     1
+             34 LOAD_CONST               3 (True)
+             36 LOAD_CONST               4 (<code object <lambda> at 0x0000024F839F2730, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 20>)
+             38 MAKE_FUNCTION            0
+
+ 19          40 KW_NAMES                 5 (('primary_key', 'default'))
+             42 CALL                     3
+             50 STORE_NAME               6 (id)
+             52 LOAD_NAME                7 (Mapped)
+             54 LOAD_NAME                8 (str)
+             56 BINARY_SUBSCR
+             60 LOAD_NAME                9 (__annotations__)
+             62 LOAD_CONST               6 ('id')
+             64 STORE_SUBSCR
+
+ 22          68 PUSH_NULL
+             70 LOAD_NAME                4 (mapped_column)
+
+ 23          72 PUSH_NULL
+             74 LOAD_NAME                5 (String)
+             76 LOAD_CONST               2 (36)
+             78 CALL                     1
+             86 PUSH_NULL
+             88 LOAD_NAME               10 (ForeignKey)
+             90 LOAD_CONST               7 ('users.id')
+             92 LOAD_CONST               8 ('CASCADE')
+             94 KW_NAMES                 9 (('ondelete',))
+             96 CALL                     2
+            104 LOAD_CONST              10 (False)
+            106 LOAD_CONST               3 (True)
+
+ 22         108 KW_NAMES                11 (('nullable', 'index'))
+            110 CALL                     4
+            118 STORE_NAME              11 (user_id)
+            120 LOAD_NAME                7 (Mapped)
+            122 LOAD_NAME                8 (str)
+            124 BINARY_SUBSCR
+            128 LOAD_NAME                9 (__annotations__)
+            130 LOAD_CONST              12 ('user_id')
+            132 STORE_SUBSCR
+
+ 25         136 PUSH_NULL
+            138 LOAD_NAME                4 (mapped_column)
+
+ 26         140 PUSH_NULL
+            142 LOAD_NAME                5 (String)
+            144 LOAD_CONST              13 (128)
+            146 CALL                     1
+            154 LOAD_CONST               3 (True)
+            156 LOAD_CONST               3 (True)
+            158 LOAD_CONST              10 (False)
+
+ 25         160 KW_NAMES                14 (('unique', 'index', 'nullable'))
+            162 CALL                     4
+            170 STORE_NAME              12 (token_hash)
+            172 LOAD_NAME                7 (Mapped)
+            174 LOAD_NAME                8 (str)
+            176 BINARY_SUBSCR
+            180 LOAD_NAME                9 (__annotations__)
+            182 LOAD_CONST              15 ('token_hash')
+            184 STORE_SUBSCR
+
+ 28         188 PUSH_NULL
+            190 LOAD_NAME                4 (mapped_column)
+            192 PUSH_NULL
+            194 LOAD_NAME                5 (String)
+            196 LOAD_CONST               2 (36)
+            198 CALL                     1
+            206 LOAD_CONST              10 (False)
+            208 LOAD_CONST               3 (True)
+            210 KW_NAMES                11 (('nullable', 'index'))
+            212 CALL                     3
+            220 STORE_NAME              13 (family_id)
+            222 LOAD_NAME                7 (Mapped)
+            224 LOAD_NAME                8 (str)
+            226 BINARY_SUBSCR
+            230 LOAD_NAME                9 (__annotations__)
+            232 LOAD_CONST              16 ('family_id')
+            234 STORE_SUBSCR
+
+ 29         238 PUSH_NULL
+            240 LOAD_NAME                4 (mapped_column)
+
+ 30         242 PUSH_NULL
+            244 LOAD_NAME               14 (DateTime)
+            246 LOAD_CONST               3 (True)
+            248 KW_NAMES                17 (('timezone',))
+            250 CALL                     1
+            258 LOAD_CONST              18 (<code object <lambda> at 0x0000024F83A7EBC0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 30>)
+            260 MAKE_FUNCTION            0
+            262 LOAD_CONST              10 (False)
+
+ 29         264 KW_NAMES                19 (('default', 'nullable'))
+            266 CALL                     3
+            274 STORE_NAME              15 (created_at)
+            276 LOAD_NAME                7 (Mapped)
+            278 LOAD_NAME               16 (datetime)
+            280 BINARY_SUBSCR
+            284 LOAD_NAME                9 (__annotations__)
+            286 LOAD_CONST              20 ('created_at')
+            288 STORE_SUBSCR
+
+ 32         292 PUSH_NULL
+            294 LOAD_NAME                4 (mapped_column)
+
+ 33         296 PUSH_NULL
+            298 LOAD_NAME               14 (DateTime)
+            300 LOAD_CONST               3 (True)
+            302 KW_NAMES                17 (('timezone',))
+            304 CALL                     1
+            312 LOAD_CONST              10 (False)
+            314 LOAD_CONST               3 (True)
+
+ 32         316 KW_NAMES                11 (('nullable', 'index'))
+            318 CALL                     3
+            326 STORE_NAME              17 (expires_at)
+            328 LOAD_NAME                7 (Mapped)
+            330 LOAD_NAME               16 (datetime)
+            332 BINARY_SUBSCR
+            336 LOAD_NAME                9 (__annotations__)
+            338 LOAD_CONST              21 ('expires_at')
+            340 STORE_SUBSCR
+
+ 35         344 PUSH_NULL
+            346 LOAD_NAME                4 (mapped_column)
+
+ 36         348 PUSH_NULL
+            350 LOAD_NAME               14 (DateTime)
+            352 LOAD_CONST               3 (True)
+            354 KW_NAMES                17 (('timezone',))
+            356 CALL                     1
+            364 LOAD_CONST               3 (True)
+            366 LOAD_CONST               3 (True)
+
+ 35         368 KW_NAMES                11 (('nullable', 'index'))
+            370 CALL                     3
+            378 STORE_NAME              18 (revoked_at)
+            380 LOAD_NAME                7 (Mapped)
+            382 LOAD_NAME               19 (Optional)
+            384 LOAD_NAME               16 (datetime)
+            386 BINARY_SUBSCR
+            390 BINARY_SUBSCR
+            394 LOAD_NAME                9 (__annotations__)
+            396 LOAD_CONST              22 ('revoked_at')
+            398 STORE_SUBSCR
+
+ 38         402 PUSH_NULL
+            404 LOAD_NAME                4 (mapped_column)
+
+ 39         406 PUSH_NULL
+            408 LOAD_NAME                5 (String)
+            410 LOAD_CONST               2 (36)
+            412 CALL                     1
+            420 LOAD_CONST               3 (True)
+
+ 38         422 KW_NAMES                23 (('nullable',))
+            424 CALL                     2
+            432 STORE_NAME              20 (replaced_by_token_id)
+            434 LOAD_NAME                7 (Mapped)
+            436 LOAD_NAME               19 (Optional)
+            438 LOAD_NAME                8 (str)
+            440 BINARY_SUBSCR
+            444 BINARY_SUBSCR
+            448 LOAD_NAME                9 (__annotations__)
+            450 LOAD_CONST              24 ('replaced_by_token_id')
+            452 STORE_SUBSCR
+
+ 41         456 PUSH_NULL
+            458 LOAD_NAME                4 (mapped_column)
+
+ 42         460 PUSH_NULL
+            462 LOAD_NAME               14 (DateTime)
+            464 LOAD_CONST               3 (True)
+            466 KW_NAMES                17 (('timezone',))
+            468 CALL                     1
+            476 LOAD_CONST               3 (True)
+
+ 41         478 KW_NAMES                23 (('nullable',))
+            480 CALL                     2
+            488 STORE_NAME              21 (last_used_at)
+            490 LOAD_NAME                7 (Mapped)
+            492 LOAD_NAME               19 (Optional)
+            494 LOAD_NAME               16 (datetime)
+            496 BINARY_SUBSCR
+            500 BINARY_SUBSCR
+            504 LOAD_NAME                9 (__annotations__)
+            506 LOAD_CONST              25 ('last_used_at')
+            508 STORE_SUBSCR
+
+ 45         512 PUSH_NULL
+            514 LOAD_NAME               22 (relationship)
+            516 LOAD_CONST              26 ('User')
+            518 LOAD_CONST               1 ('refresh_tokens')
+            520 KW_NAMES                27 (('back_populates',))
+            522 CALL                     2
+            530 STORE_NAME              23 (user)
+            532 LOAD_NAME                7 (Mapped)
+            534 LOAD_CONST              26 ('User')
+            536 BINARY_SUBSCR
+            540 LOAD_NAME                9 (__annotations__)
+            542 LOAD_CONST              28 ('user')
+            544 STORE_SUBSCR
+
+ 47         548 LOAD_CONST              29 ('return')
+            550 LOAD_NAME                8 (str)
+            552 BUILD_TUPLE              2
+            554 LOAD_CONST              30 (<code object __repr__ at 0x0000024F83A3F510, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\app\models\refresh_token.py", line 47>)
+            556 MAKE_FUNCTION            4 (annotations)
+            558 STORE_NAME              24 (__repr__)
+            560 RETURN_CONST            31 (None)
+
+    CODE: <lambda>
+    Names: ('str', 'uuid', 'uuid4')
+    Constants: (None,)
+ 20           0 RESUME                   0
+              2 LOAD_GLOBAL              1 (NULL + str)
+             12 LOAD_GLOBAL              3 (NULL + uuid)
+             22 LOAD_ATTR                4 (uuid4)
+             42 CALL                     0
+             50 CALL                     1
+             58 RETURN_VALUE
+
+    CODE: <lambda>
+    Names: ('datetime', 'now', 'timezone', 'utc')
+    Constants: (None,)
+ 30           0 RESUME                   0
+              2 LOAD_GLOBAL              1 (NULL + datetime)
+             12 LOAD_ATTR                2 (now)
+             32 LOAD_GLOBAL              4 (timezone)
+             42 LOAD_ATTR                6 (utc)
+             62 CALL                     1
+             70 RETURN_VALUE
+
+    CODE: __repr__
+    Names: ('id', 'family_id', 'user_id')
+    Constants: (None, '<RefreshToken id=', ' family_id=', ' user_id=', '>')
+ 47           0 RESUME                   0
+
+ 48           2 LOAD_CONST               1 ('<RefreshToken id=')
+              4 LOAD_FAST                0 (self)
+              6 LOAD_ATTR                0 (id)
+             26 FORMAT_VALUE             0
+             28 LOAD_CONST               2 (' family_id=')
+             30 LOAD_FAST                0 (self)
+             32 LOAD_ATTR                2 (family_id)
+             52 FORMAT_VALUE             0
+             54 LOAD_CONST               3 (' user_id=')
+             56 LOAD_FAST                0 (self)
+             58 LOAD_ATTR                4 (user_id)
+             78 FORMAT_VALUE             0
+             80 LOAD_CONST               4 ('>')
+             82 BUILD_STRING             7
+             84 RETURN_VALUE
+
+================================================================================
+FILE: backend\alembic\versions\__pycache__\8e1d9a3f7f0c_add_refresh_token_support.cpython-312.pyc
+
+CODE: <module>
+Names: ('__doc__', 'typing', 'Sequence', 'Union', 'alembic', 'op', 'sqlalchemy', 'sa', 'revision', 'str', '__annotations__', 'down_revision', 'branch_labels', 'depends_on', 'upgrade', 'downgrade')
+Constants: ('add_refresh_token_support\n\nRevision ID: 8e1d9a3f7f0c\nRevises: 9743b997d217\nCreate Date: 2026-10-11 00:00:00.000000\n\n', 0, ('Sequence', 'Union'), ('op',), None, '8e1d9a3f7f0c', 'revision', 'f96b0fa4d5b1', 'down_revision', 'branch_labels', 'depends_on', <code object upgrade at 0x0000024F83995240, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\8e1d9a3f7f0c_add_refresh_token_support.py", line 22>, <code object downgrade at 0x0000024F838D36C0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\8e1d9a3f7f0c_add_refresh_token_support.py", line 46>, ('return', None))
+  0           0 RESUME                   0
+
+  1           2 SETUP_ANNOTATIONS
+              4 LOAD_CONST               0 ('add_refresh_token_support\n\nRevision ID: 8e1d9a3f7f0c\nRevises: 9743b997d217\nCreate Date: 2026-10-11 00:00:00.000000\n\n')
+              6 STORE_NAME               0 (__doc__)
+
+  9           8 LOAD_CONST               1 (0)
+             10 LOAD_CONST               2 (('Sequence', 'Union'))
+             12 IMPORT_NAME              1 (typing)
+             14 IMPORT_FROM              2 (Sequence)
+             16 STORE_NAME               2 (Sequence)
+             18 IMPORT_FROM              3 (Union)
+             20 STORE_NAME               3 (Union)
+             22 POP_TOP
+
+ 11          24 LOAD_CONST               1 (0)
+             26 LOAD_CONST               3 (('op',))
+             28 IMPORT_NAME              4 (alembic)
+             30 IMPORT_FROM              5 (op)
+             32 STORE_NAME               5 (op)
+             34 POP_TOP
+
+ 12          36 LOAD_CONST               1 (0)
+             38 LOAD_CONST               4 (None)
+             40 IMPORT_NAME              6 (sqlalchemy)
+             42 STORE_NAME               7 (sa)
+
+ 16          44 LOAD_CONST               5 ('8e1d9a3f7f0c')
+             46 STORE_NAME               8 (revision)
+             48 LOAD_NAME                9 (str)
+             50 LOAD_NAME               10 (__annotations__)
+             52 LOAD_CONST               6 ('revision')
+             54 STORE_SUBSCR
+
+ 17          58 LOAD_CONST               7 ('f96b0fa4d5b1')
+             60 STORE_NAME              11 (down_revision)
+             62 LOAD_NAME                3 (Union)
+             64 LOAD_NAME                9 (str)
+             66 LOAD_NAME                2 (Sequence)
+             68 LOAD_NAME                9 (str)
+             70 BINARY_SUBSCR
+             74 LOAD_CONST               4 (None)
+             76 BUILD_TUPLE              3
+             78 BINARY_SUBSCR
+             82 LOAD_NAME               10 (__annotations__)
+             84 LOAD_CONST               8 ('down_revision')
+             86 STORE_SUBSCR
+
+ 18          90 LOAD_CONST               4 (None)
+             92 STORE_NAME              12 (branch_labels)
+             94 LOAD_NAME                3 (Union)
+             96 LOAD_NAME                9 (str)
+             98 LOAD_NAME                2 (Sequence)
+            100 LOAD_NAME                9 (str)
+            102 BINARY_SUBSCR
+            106 LOAD_CONST               4 (None)
+            108 BUILD_TUPLE              3
+            110 BINARY_SUBSCR
+            114 LOAD_NAME               10 (__annotations__)
+            116 LOAD_CONST               9 ('branch_labels')
+            118 STORE_SUBSCR
+
+ 19         122 LOAD_CONST               4 (None)
+            124 STORE_NAME              13 (depends_on)
+            126 LOAD_NAME                3 (Union)
+            128 LOAD_NAME                9 (str)
+            130 LOAD_NAME                2 (Sequence)
+            132 LOAD_NAME                9 (str)
+            134 BINARY_SUBSCR
+            138 LOAD_CONST               4 (None)
+            140 BUILD_TUPLE              3
+            142 BINARY_SUBSCR
+            146 LOAD_NAME               10 (__annotations__)
+            148 LOAD_CONST              10 ('depends_on')
+            150 STORE_SUBSCR
+
+ 22         154 LOAD_CONST              13 (('return', None))
+            156 LOAD_CONST              11 (<code object upgrade at 0x0000024F83995240, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\8e1d9a3f7f0c_add_refresh_token_support.py", line 22>)
+            158 MAKE_FUNCTION            4 (annotations)
+            160 STORE_NAME              14 (upgrade)
+
+ 46         162 LOAD_CONST              13 (('return', None))
+            164 LOAD_CONST              12 (<code object downgrade at 0x0000024F838D36C0, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\8e1d9a3f7f0c_add_refresh_token_support.py", line 46>)
+            166 MAKE_FUNCTION            4 (annotations)
+            168 STORE_NAME              15 (downgrade)
+            170 RETURN_CONST             4 (None)
+
+  CODE: upgrade
+  Names: ('op', 'create_table', 'sa', 'Column', 'String', 'DateTime', 'ForeignKeyConstraint', 'PrimaryKeyConstraint', 'batch_alter_table', 'create_index', 'f')
+  Constants: ('Add rotating refresh-token storage for browser session persistence.', 'refresh_tokens', 'id', 36, ('length',), False, ('nullable',), 'user_id', 'token_hash', 128, 'family_id', 'created_at', True, ('timezone',), 'expires_at', 'revoked_at', 'replaced_by_token_id', 'last_used_at', 'users.id', 'CASCADE', ('ondelete',), None, ('schema',), 'ix_refresh_tokens_family_id', ('unique',), 'ix_refresh_tokens_token_hash', 'ix_refresh_tokens_user_id', 'ix_refresh_tokens_expires_at', 'ix_refresh_tokens_revoked_at')
+ 22           0 RESUME                   0
+
+ 24           2 LOAD_GLOBAL              1 (NULL + op)
+             12 LOAD_ATTR                2 (create_table)
+
+ 25          32 LOAD_CONST               1 ('refresh_tokens')
+
+ 26          34 LOAD_GLOBAL              5 (NULL + sa)
+             44 LOAD_ATTR                6 (Column)
+             64 LOAD_CONST               2 ('id')
+             66 LOAD_GLOBAL              5 (NULL + sa)
+             76 LOAD_ATTR                8 (String)
+             96 LOAD_CONST               3 (36)
+             98 KW_NAMES                 4 (('length',))
+            100 CALL                     1
+            108 LOAD_CONST               5 (False)
+            110 KW_NAMES                 6 (('nullable',))
+            112 CALL                     3
+
+ 27         120 LOAD_GLOBAL              5 (NULL + sa)
+            130 LOAD_ATTR                6 (Column)
+            150 LOAD_CONST               7 ('user_id')
+            152 LOAD_GLOBAL              5 (NULL + sa)
+            162 LOAD_ATTR                8 (String)
+            182 LOAD_CONST               3 (36)
+            184 KW_NAMES                 4 (('length',))
+            186 CALL                     1
+            194 LOAD_CONST               5 (False)
+            196 KW_NAMES                 6 (('nullable',))
+            198 CALL                     3
+
+ 28         206 LOAD_GLOBAL              5 (NULL + sa)
+            216 LOAD_ATTR                6 (Column)
+            236 LOAD_CONST               8 ('token_hash')
+            238 LOAD_GLOBAL              5 (NULL + sa)
+            248 LOAD_ATTR                8 (String)
+            268 LOAD_CONST               9 (128)
+            270 KW_NAMES                 4 (('length',))
+            272 CALL                     1
+            280 LOAD_CONST               5 (False)
+            282 KW_NAMES                 6 (('nullable',))
+            284 CALL                     3
+
+ 29         292 LOAD_GLOBAL              5 (NULL + sa)
+            302 LOAD_ATTR                6 (Column)
+            322 LOAD_CONST              10 ('family_id')
+            324 LOAD_GLOBAL              5 (NULL + sa)
+            334 LOAD_ATTR                8 (String)
+            354 LOAD_CONST               3 (36)
+            356 KW_NAMES                 4 (('length',))
+            358 CALL                     1
+            366 LOAD_CONST               5 (False)
+            368 KW_NAMES                 6 (('nullable',))
+            370 CALL                     3
+
+ 30         378 LOAD_GLOBAL              5 (NULL + sa)
+            388 LOAD_ATTR                6 (Column)
+            408 LOAD_CONST              11 ('created_at')
+            410 LOAD_GLOBAL              5 (NULL + sa)
+            420 LOAD_ATTR               10 (DateTime)
+            440 LOAD_CONST              12 (True)
+            442 KW_NAMES                13 (('timezone',))
+            444 CALL                     1
+            452 LOAD_CONST               5 (False)
+            454 KW_NAMES                 6 (('nullable',))
+            456 CALL                     3
+
+ 31         464 LOAD_GLOBAL              5 (NULL + sa)
+            474 LOAD_ATTR                6 (Column)
+            494 LOAD_CONST              14 ('expires_at')
+            496 LOAD_GLOBAL              5 (NULL + sa)
+            506 LOAD_ATTR               10 (DateTime)
+            526 LOAD_CONST              12 (True)
+            528 KW_NAMES                13 (('timezone',))
+            530 CALL                     1
+            538 LOAD_CONST               5 (False)
+            540 KW_NAMES                 6 (('nullable',))
+            542 CALL                     3
+
+ 32         550 LOAD_GLOBAL              5 (NULL + sa)
+            560 LOAD_ATTR                6 (Column)
+            580 LOAD_CONST              15 ('revoked_at')
+            582 LOAD_GLOBAL              5 (NULL + sa)
+            592 LOAD_ATTR               10 (DateTime)
+            612 LOAD_CONST              12 (True)
+            614 KW_NAMES                13 (('timezone',))
+            616 CALL                     1
+            624 LOAD_CONST              12 (True)
+            626 KW_NAMES                 6 (('nullable',))
+            628 CALL                     3
+
+ 33         636 LOAD_GLOBAL              5 (NULL + sa)
+            646 LOAD_ATTR                6 (Column)
+            666 LOAD_CONST              16 ('replaced_by_token_id')
+            668 LOAD_GLOBAL              5 (NULL + sa)
+            678 LOAD_ATTR                8 (String)
+            698 LOAD_CONST               3 (36)
+            700 KW_NAMES                 4 (('length',))
+            702 CALL                     1
+            710 LOAD_CONST              12 (True)
+            712 KW_NAMES                 6 (('nullable',))
+            714 CALL                     3
+
+ 34         722 LOAD_GLOBAL              5 (NULL + sa)
+            732 LOAD_ATTR                6 (Column)
+            752 LOAD_CONST              17 ('last_used_at')
+            754 LOAD_GLOBAL              5 (NULL + sa)
+            764 LOAD_ATTR               10 (DateTime)
+            784 LOAD_CONST              12 (True)
+            786 KW_NAMES                13 (('timezone',))
+            788 CALL                     1
+            796 LOAD_CONST              12 (True)
+            798 KW_NAMES                 6 (('nullable',))
+            800 CALL                     3
+
+ 35         808 LOAD_GLOBAL              5 (NULL + sa)
+            818 LOAD_ATTR               12 (ForeignKeyConstraint)
+            838 LOAD_CONST               7 ('user_id')
+            840 BUILD_LIST               1
+            842 LOAD_CONST              18 ('users.id')
+            844 BUILD_LIST               1
+            846 LOAD_CONST              19 ('CASCADE')
+            848 KW_NAMES                20 (('ondelete',))
+            850 CALL                     3
+
+ 36         858 LOAD_GLOBAL              5 (NULL + sa)
+            868 LOAD_ATTR               14 (PrimaryKeyConstraint)
+            888 LOAD_CONST               2 ('id')
+            890 CALL                     1
+
+ 24         898 CALL                    12
+            906 POP_TOP
+
+ 38         908 LOAD_GLOBAL              1 (NULL + op)
+            918 LOAD_ATTR               16 (batch_alter_table)
+            938 LOAD_CONST               1 ('refresh_tokens')
+            940 LOAD_CONST              21 (None)
+            942 KW_NAMES                22 (('schema',))
+            944 CALL                     2
+            952 BEFORE_WITH
+            954 STORE_FAST               0 (batch_op)
+
+ 39         956 LOAD_FAST                0 (batch_op)
+            958 LOAD_ATTR               19 (NULL|self + create_index)
+            978 LOAD_FAST                0 (batch_op)
+            980 LOAD_ATTR               21 (NULL|self + f)
+           1000 LOAD_CONST              23 ('ix_refresh_tokens_family_id')
+           1002 CALL                     1
+           1010 LOAD_CONST              10 ('family_id')
+           1012 BUILD_LIST               1
+           1014 LOAD_CONST               5 (False)
+           1016 KW_NAMES                24 (('unique',))
+           1018 CALL                     3
+           1026 POP_TOP
+
+ 40        1028 LOAD_FAST                0 (batch_op)
+           1030 LOAD_ATTR               19 (NULL|self + create_index)
+           1050 LOAD_FAST                0 (batch_op)
+           1052 LOAD_ATTR               21 (NULL|self + f)
+           1072 LOAD_CONST              25 ('ix_refresh_tokens_token_hash')
+           1074 CALL                     1
+           1082 LOAD_CONST               8 ('token_hash')
+           1084 BUILD_LIST               1
+           1086 LOAD_CONST              12 (True)
+           1088 KW_NAMES                24 (('unique',))
+           1090 CALL                     3
+           1098 POP_TOP
+
+ 41        1100 LOAD_FAST                0 (batch_op)
+           1102 LOAD_ATTR               19 (NULL|self + create_index)
+           1122 LOAD_FAST                0 (batch_op)
+           1124 LOAD_ATTR               21 (NULL|self + f)
+           1144 LOAD_CONST              26 ('ix_refresh_tokens_user_id')
+           1146 CALL                     1
+           1154 LOAD_CONST               7 ('user_id')
+           1156 BUILD_LIST               1
+           1158 LOAD_CONST               5 (False)
+           1160 KW_NAMES                24 (('unique',))
+           1162 CALL                     3
+           1170 POP_TOP
+
+ 42        1172 LOAD_FAST                0 (batch_op)
+           1174 LOAD_ATTR               19 (NULL|self + create_index)
+           1194 LOAD_FAST                0 (batch_op)
+           1196 LOAD_ATTR               21 (NULL|self + f)
+           1216 LOAD_CONST              27 ('ix_refresh_tokens_expires_at')
+           1218 CALL                     1
+           1226 LOAD_CONST              14 ('expires_at')
+           1228 BUILD_LIST               1
+           1230 LOAD_CONST               5 (False)
+           1232 KW_NAMES                24 (('unique',))
+           1234 CALL                     3
+           1242 POP_TOP
+
+ 43        1244 LOAD_FAST                0 (batch_op)
+           1246 LOAD_ATTR               19 (NULL|self + create_index)
+           1266 LOAD_FAST                0 (batch_op)
+           1268 LOAD_ATTR               21 (NULL|self + f)
+           1288 LOAD_CONST              28 ('ix_refresh_tokens_revoked_at')
+           1290 CALL                     1
+           1298 LOAD_CONST              15 ('revoked_at')
+           1300 BUILD_LIST               1
+           1302 LOAD_CONST               5 (False)
+           1304 KW_NAMES                24 (('unique',))
+           1306 CALL                     3
+           1314 POP_TOP
+
+ 38        1316 LOAD_CONST              21 (None)
+           1318 LOAD_CONST              21 (None)
+           1320 LOAD_CONST              21 (None)
+           1322 CALL                     2
+           1330 POP_TOP
+           1332 RETURN_CONST            21 (None)
+        >> 1334 PUSH_EXC_INFO
+           1336 WITH_EXCEPT_START
+           1338 POP_JUMP_IF_TRUE         1 (to 1342)
+           1340 RERAISE                  2
+        >> 1342 POP_TOP
+           1344 POP_EXCEPT
+           1346 POP_TOP
+           1348 POP_TOP
+           1350 RETURN_CONST            21 (None)
+        >> 1352 COPY                     3
+           1354 POP_EXCEPT
+           1356 RERAISE                  1
+ExceptionTable:
+  954 to 1314 -> 1334 [1] lasti
+  1334 to 1342 -> 1352 [3] lasti
+
+  CODE: downgrade
+  Names: ('op', 'batch_alter_table', 'drop_index', 'f', 'drop_table')
+  Constants: ('Remove refresh-token storage.', 'refresh_tokens', None, ('schema',), 'ix_refresh_tokens_revoked_at', 'ix_refresh_tokens_expires_at', 'ix_refresh_tokens_user_id', 'ix_refresh_tokens_token_hash', 'ix_refresh_tokens_family_id')
+ 46           0 RESUME                   0
+
+ 48           2 LOAD_GLOBAL              1 (NULL + op)
+             12 LOAD_ATTR                2 (batch_alter_table)
+             32 LOAD_CONST               1 ('refresh_tokens')
+             34 LOAD_CONST               2 (None)
+             36 KW_NAMES                 3 (('schema',))
+             38 CALL                     2
+             46 BEFORE_WITH
+             48 STORE_FAST               0 (batch_op)
+
+ 49          50 LOAD_FAST                0 (batch_op)
+             52 LOAD_ATTR                5 (NULL|self + drop_index)
+             72 LOAD_FAST                0 (batch_op)
+             74 LOAD_ATTR                7 (NULL|self + f)
+             94 LOAD_CONST               4 ('ix_refresh_tokens_revoked_at')
+             96 CALL                     1
+            104 CALL                     1
+            112 POP_TOP
+
+ 50         114 LOAD_FAST                0 (batch_op)
+            116 LOAD_ATTR                5 (NULL|self + drop_index)
+            136 LOAD_FAST                0 (batch_op)
+            138 LOAD_ATTR                7 (NULL|self + f)
+            158 LOAD_CONST               5 ('ix_refresh_tokens_expires_at')
+            160 CALL                     1
+            168 CALL                     1
+            176 POP_TOP
+
+ 51         178 LOAD_FAST                0 (batch_op)
+            180 LOAD_ATTR                5 (NULL|self + drop_index)
+            200 LOAD_FAST                0 (batch_op)
+            202 LOAD_ATTR                7 (NULL|self + f)
+            222 LOAD_CONST               6 ('ix_refresh_tokens_user_id')
+            224 CALL                     1
+            232 CALL                     1
+            240 POP_TOP
+
+ 52         242 LOAD_FAST                0 (batch_op)
+            244 LOAD_ATTR                5 (NULL|self + drop_index)
+            264 LOAD_FAST                0 (batch_op)
+            266 LOAD_ATTR                7 (NULL|self + f)
+            286 LOAD_CONST               7 ('ix_refresh_tokens_token_hash')
+            288 CALL                     1
+            296 CALL                     1
+            304 POP_TOP
+
+ 53         306 LOAD_FAST                0 (batch_op)
+            308 LOAD_ATTR                5 (NULL|self + drop_index)
+            328 LOAD_FAST                0 (batch_op)
+            330 LOAD_ATTR                7 (NULL|self + f)
+            350 LOAD_CONST               8 ('ix_refresh_tokens_family_id')
+            352 CALL                     1
+            360 CALL                     1
+            368 POP_TOP
+
+ 48         370 LOAD_CONST               2 (None)
+            372 LOAD_CONST               2 (None)
+            374 LOAD_CONST               2 (None)
+            376 CALL                     2
+            384 POP_TOP
+
+ 55     >>  386 LOAD_GLOBAL              1 (NULL + op)
+            396 LOAD_ATTR                8 (drop_table)
+            416 LOAD_CONST               1 ('refresh_tokens')
+            418 CALL                     1
+            426 POP_TOP
+            428 RETURN_CONST             2 (None)
+
+ 48     >>  430 PUSH_EXC_INFO
+            432 WITH_EXCEPT_START
+            434 POP_JUMP_IF_TRUE         1 (to 438)
+            436 RERAISE                  2
+        >>  438 POP_TOP
+            440 POP_EXCEPT
+            442 POP_TOP
+            444 POP_TOP
+            446 JUMP_BACKWARD           31 (to 386)
+        >>  448 COPY                     3
+            450 POP_EXCEPT
+            452 RERAISE                  1
+ExceptionTable:
+  48 to 368 -> 430 [1] lasti
+  430 to 438 -> 448 [3] lasti
+
+================================================================================
+FILE: backend\alembic\versions\__pycache__\f96b0fa4d5b1_postgres_hardening.cpython-312.pyc
+
+CODE: <module>
+Names: ('__doc__', 'typing', 'Sequence', 'Union', 'sqlalchemy', 'sa', 'alembic', 'op', 'revision', 'str', '__annotations__', 'down_revision', 'branch_labels', 'depends_on', 'upgrade', 'downgrade')
+Constants: ('Add PostgreSQL-friendly constraints and indexes.\n\nRevision ID: f96b0fa4d5b1\nRevises: 9743b997d217\nCreate Date: 2026-10-11 00:00:00.000000\n\n', 0, ('Sequence', 'Union'), None, ('op',), 'f96b0fa4d5b1', 'revision', '9743b997d217', 'down_revision', 'branch_labels', 'depends_on', <code object upgrade at 0x0000024F83BB7360, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\f96b0fa4d5b1_postgres_hardening.py", line 21>, <code object downgrade at 0x0000024F83995860, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\f96b0fa4d5b1_postgres_hardening.py", line 47>, ('return', None))
+  0           0 RESUME                   0
+
+  1           2 SETUP_ANNOTATIONS
+              4 LOAD_CONST               0 ('Add PostgreSQL-friendly constraints and indexes.\n\nRevision ID: f96b0fa4d5b1\nRevises: 9743b997d217\nCreate Date: 2026-10-11 00:00:00.000000\n\n')
+              6 STORE_NAME               0 (__doc__)
+
+  9           8 LOAD_CONST               1 (0)
+             10 LOAD_CONST               2 (('Sequence', 'Union'))
+             12 IMPORT_NAME              1 (typing)
+             14 IMPORT_FROM              2 (Sequence)
+             16 STORE_NAME               2 (Sequence)
+             18 IMPORT_FROM              3 (Union)
+             20 STORE_NAME               3 (Union)
+             22 POP_TOP
+
+ 11          24 LOAD_CONST               1 (0)
+             26 LOAD_CONST               3 (None)
+             28 IMPORT_NAME              4 (sqlalchemy)
+             30 STORE_NAME               5 (sa)
+
+ 12          32 LOAD_CONST               1 (0)
+             34 LOAD_CONST               4 (('op',))
+             36 IMPORT_NAME              6 (alembic)
+             38 IMPORT_FROM              7 (op)
+             40 STORE_NAME               7 (op)
+             42 POP_TOP
+
+ 15          44 LOAD_CONST               5 ('f96b0fa4d5b1')
+             46 STORE_NAME               8 (revision)
+             48 LOAD_NAME                9 (str)
+             50 LOAD_NAME               10 (__annotations__)
+             52 LOAD_CONST               6 ('revision')
+             54 STORE_SUBSCR
+
+ 16          58 LOAD_CONST               7 ('9743b997d217')
+             60 STORE_NAME              11 (down_revision)
+             62 LOAD_NAME                3 (Union)
+             64 LOAD_NAME                9 (str)
+             66 LOAD_NAME                2 (Sequence)
+             68 LOAD_NAME                9 (str)
+             70 BINARY_SUBSCR
+             74 LOAD_CONST               3 (None)
+             76 BUILD_TUPLE              3
+             78 BINARY_SUBSCR
+             82 LOAD_NAME               10 (__annotations__)
+             84 LOAD_CONST               8 ('down_revision')
+             86 STORE_SUBSCR
+
+ 17          90 LOAD_CONST               3 (None)
+             92 STORE_NAME              12 (branch_labels)
+             94 LOAD_NAME                3 (Union)
+             96 LOAD_NAME                9 (str)
+             98 LOAD_NAME                2 (Sequence)
+            100 LOAD_NAME                9 (str)
+            102 BINARY_SUBSCR
+            106 LOAD_CONST               3 (None)
+            108 BUILD_TUPLE              3
+            110 BINARY_SUBSCR
+            114 LOAD_NAME               10 (__annotations__)
+            116 LOAD_CONST               9 ('branch_labels')
+            118 STORE_SUBSCR
+
+ 18         122 LOAD_CONST               3 (None)
+            124 STORE_NAME              13 (depends_on)
+            126 LOAD_NAME                3 (Union)
+            128 LOAD_NAME                9 (str)
+            130 LOAD_NAME                2 (Sequence)
+            132 LOAD_NAME                9 (str)
+            134 BINARY_SUBSCR
+            138 LOAD_CONST               3 (None)
+            140 BUILD_TUPLE              3
+            142 BINARY_SUBSCR
+            146 LOAD_NAME               10 (__annotations__)
+            148 LOAD_CONST              10 ('depends_on')
+            150 STORE_SUBSCR
+
+ 21         154 LOAD_CONST              13 (('return', None))
+            156 LOAD_CONST              11 (<code object upgrade at 0x0000024F83BB7360, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\f96b0fa4d5b1_postgres_hardening.py", line 21>)
+            158 MAKE_FUNCTION            4 (annotations)
+            160 STORE_NAME              14 (upgrade)
+
+ 47         162 LOAD_CONST              13 (('return', None))
+            164 LOAD_CONST              12 (<code object downgrade at 0x0000024F83995860, file "C:\Users\NIKSHITH\OneDrive\Desktop\Medical Dashboard\backend\alembic\versions\f96b0fa4d5b1_postgres_hardening.py", line 47>)
+            166 MAKE_FUNCTION            4 (annotations)
+            168 STORE_NAME              15 (downgrade)
+            170 RETURN_CONST             3 (None)
+
+  CODE: upgrade
+  Names: ('op', 'batch_alter_table', 'create_index', 'f', 'create_check_constraint')
+  Constants: ('Add stronger PostgreSQL-friendly constraints and indexes.', 'users', None, ('schema',), 'ix_users_is_active', 'is_active', False, ('unique',), 'trials', 'ck_trials_status_valid', "status IN ('active', 'recruiting', 'paused', 'completed', 'terminated')", 'ix_trials_status', 'status', 'participants', 'ck_participants_status_valid', "status IN ('active', 'completed', 'withdrawn')", 'audit_events', 'ix_audit_events_action_outcome', 'action', 'outcome')
+ 21           0 RESUME                   0
+
+ 23           2 LOAD_GLOBAL              1 (NULL + op)
+             12 LOAD_ATTR                2 (batch_alter_table)
+             32 LOAD_CONST               1 ('users')
+             34 LOAD_CONST               2 (None)
+             36 KW_NAMES                 3 (('schema',))
+             38 CALL                     2
+             46 BEFORE_WITH
+             48 STORE_FAST               0 (batch_op)
+
+ 24          50 LOAD_FAST                0 (batch_op)
+             52 LOAD_ATTR                5 (NULL|self + create_index)
+             72 LOAD_FAST                0 (batch_op)
+             74 LOAD_ATTR                7 (NULL|self + f)
+             94 LOAD_CONST               4 ('ix_users_is_active')
+             96 CALL                     1
+            104 LOAD_CONST               5 ('is_active')
+            106 BUILD_LIST               1
+            108 LOAD_CONST               6 (False)
+            110 KW_NAMES                 7 (('unique',))
+            112 CALL                     3
+            120 POP_TOP
+
+ 23         122 LOAD_CONST               2 (None)
+            124 LOAD_CONST               2 (None)
+            126 LOAD_CONST               2 (None)
+            128 CALL                     2
+            136 POP_TOP
+
+ 26     >>  138 LOAD_GLOBAL              1 (NULL + op)
+            148 LOAD_ATTR                2 (batch_alter_table)
+            168 LOAD_CONST               8 ('trials')
+            170 LOAD_CONST               2 (None)
+            172 KW_NAMES                 3 (('schema',))
+            174 CALL                     2
+            182 BEFORE_WITH
+            184 STORE_FAST               0 (batch_op)
+
+ 27         186 LOAD_FAST                0 (batch_op)
+            188 LOAD_ATTR                9 (NULL|self + create_check_constraint)
+
+ 28         208 LOAD_CONST               9 ('ck_trials_status_valid')
+
+ 29         210 LOAD_CONST              10 ("status IN ('active', 'recruiting', 'paused', 'completed', 'terminated')")
+
+ 27         212 CALL                     2
+            220 POP_TOP
+
+ 31         222 LOAD_FAST                0 (batch_op)
+            224 LOAD_ATTR                5 (NULL|self + create_index)
+            244 LOAD_FAST                0 (batch_op)
+            246 LOAD_ATTR                7 (NULL|self + f)
+            266 LOAD_CONST              11 ('ix_trials_status')
+            268 CALL                     1
+            276 LOAD_CONST              12 ('status')
+            278 BUILD_LIST               1
+            280 LOAD_CONST               6 (False)
+            282 KW_NAMES                 7 (('unique',))
+            284 CALL                     3
+            292 POP_TOP
+
+ 26         294 LOAD_CONST               2 (None)
+            296 LOAD_CONST               2 (None)
+            298 LOAD_CONST               2 (None)
+            300 CALL                     2
+            308 POP_TOP
+
+ 33     >>  310 LOAD_GLOBAL              1 (NULL + op)
+            320 LOAD_ATTR                2 (batch_alter_table)
+            340 LOAD_CONST              13 ('participants')
+            342 LOAD_CONST               2 (None)
+            344 KW_NAMES                 3 (('schema',))
+            346 CALL                     2
+            354 BEFORE_WITH
+            356 STORE_FAST               0 (batch_op)
+
+ 34         358 LOAD_FAST                0 (batch_op)
+            360 LOAD_ATTR                9 (NULL|self + create_check_constraint)
+
+ 35         380 LOAD_CONST              14 ('ck_participants_status_valid')
+
+ 36         382 LOAD_CONST              15 ("status IN ('active', 'completed', 'withdrawn')")
+
+ 34         384 CALL                     2
+            392 POP_TOP
+
+ 33         394 LOAD_CONST               2 (None)
+            396 LOAD_CONST               2 (None)
+            398 LOAD_CONST               2 (None)
+            400 CALL                     2
+            408 POP_TOP
+
+ 39     >>  410 LOAD_GLOBAL              1 (NULL + op)
+            420 LOAD_ATTR                2 (batch_alter_table)
+            440 LOAD_CONST              16 ('audit_events')
+            442 LOAD_CONST               2 (None)
+            444 KW_NAMES                 3 (('schema',))
+            446 CALL                     2
+            454 BEFORE_WITH
+            456 STORE_FAST               0 (batch_op)
+
+ 40         458 LOAD_FAST                0 (batch_op)
+            460 LOAD_ATTR                5 (NULL|self + create_index)
+
+ 41         480 LOAD_FAST                0 (batch_op)
+            482 LOAD_ATTR                7 (NULL|self + f)
+            502 LOAD_CONST              17 ('ix_audit_events_action_outcome')
+            504 CALL                     1
+
+ 42         512 LOAD_CONST              18 ('action')
+            514 LOAD_CONST              19 ('outcome')
+            516 BUILD_LIST               2
+
+ 43         518 LOAD_CONST               6 (False)
+
+ 40         520 KW_NAMES                 7 (('unique',))
+            522 CALL                     3
+            530 POP_TOP
+
+ 39         532 LOAD_CONST               2 (None)
+            534 LOAD_CONST               2 (None)
+            536 LOAD_CONST               2 (None)
+            538 CALL                     2
+            546 POP_TOP
+            548 RETURN_CONST             2 (None)
+
+ 23     >>  550 PUSH_EXC_INFO
+            552 WITH_EXCEPT_START
+            554 POP_JUMP_IF_TRUE         1 (to 558)
+            556 RERAISE                  2
+        >>  558 POP_TOP
+            560 POP_EXCEPT
+            562 POP_TOP
+            564 POP_TOP
+            566 JUMP_BACKWARD          215 (to 138)
+        >>  568 COPY                     3
+            570 POP_EXCEPT
+            572 RERAISE                  1
+
+ 26     >>  574 PUSH_EXC_INFO
+            576 WITH_EXCEPT_START
+            578 POP_JUMP_IF_TRUE         1 (to 582)
+            580 RERAISE                  2
+        >>  582 POP_TOP
+            584 POP_EXCEPT
+            586 POP_TOP
+            588 POP_TOP
+            590 JUMP_BACKWARD          141 (to 310)
+        >>  592 COPY                     3
+            594 POP_EXCEPT
+            596 RERAISE                  1
+
+ 33     >>  598 PUSH_EXC_INFO
+            600 WITH_EXCEPT_START
+            602 POP_JUMP_IF_TRUE         1 (to 606)
+            604 RERAISE                  2
+        >>  606 POP_TOP
+            608 POP_EXCEPT
+            610 POP_TOP
+            612 POP_TOP
+            614 JUMP_BACKWARD          103 (to 410)
+        >>  616 COPY                     3
+            618 POP_EXCEPT
+            620 RERAISE                  1
+
+ 39     >>  622 PUSH_EXC_INFO
+            624 WITH_EXCEPT_START
+            626 POP_JUMP_IF_TRUE         1 (to 630)
+            628 RERAISE                  2
+        >>  630 POP_TOP
+            632 POP_EXCEPT
+            634 POP_TOP
+            636 POP_TOP
+            638 RETURN_CONST             2 (None)
+        >>  640 COPY                     3
+            642 POP_EXCEPT
+            644 RERAISE                  1
+ExceptionTable:
+  48 to 120 -> 550 [1] lasti
+  184 to 292 -> 574 [1] lasti
+  356 to 392 -> 598 [1] lasti
+  456 to 530 -> 622 [1] lasti
+  550 to 558 -> 568 [3] lasti
+  574 to 582 -> 592 [3] lasti
+  598 to 606 -> 616 [3] lasti
+  622 to 630 -> 640 [3] lasti
+
+  CODE: downgrade
+  Names: ('op', 'batch_alter_table', 'drop_index', 'f', 'drop_constraint')
+  Constants: ('Remove the hardening constraints and indexes added in upgrade().', 'audit_events', None, ('schema',), 'ix_audit_events_action_outcome', 'participants', 'ck_participants_status_valid', 'check', ('type_',), 'trials', 'ck_trials_status_valid', 'ix_trials_status', 'users', 'ix_users_is_active')
+ 47           0 RESUME                   0
+
+ 49           2 LOAD_GLOBAL              1 (NULL + op)
+             12 LOAD_ATTR                2 (batch_alter_table)
+             32 LOAD_CONST               1 ('audit_events')
+             34 LOAD_CONST               2 (None)
+             36 KW_NAMES                 3 (('schema',))
+             38 CALL                     2
+             46 BEFORE_WITH
+             48 STORE_FAST               0 (batch_op)
+
+ 50          50 LOAD_FAST                0 (batch_op)
+             52 LOAD_ATTR                5 (NULL|self + drop_index)
+             72 LOAD_FAST                0 (batch_op)
+             74 LOAD_ATTR                7 (NULL|self + f)
+             94 LOAD_CONST               4 ('ix_audit_events_action_outcome')
+             96 CALL                     1
+            104 CALL                     1
+            112 POP_TOP
+
+ 49         114 LOAD_CONST               2 (None)
+            116 LOAD_CONST               2 (None)
+            118 LOAD_CONST               2 (None)
+            120 CALL                     2
+            128 POP_TOP
+
+ 52     >>  130 LOAD_GLOBAL              1 (NULL + op)
+            140 LOAD_ATTR                2 (batch_alter_table)
+            160 LOAD_CONST               5 ('participants')
+            162 LOAD_CONST               2 (None)
+            164 KW_NAMES                 3 (('schema',))
+            166 CALL                     2
+            174 BEFORE_WITH
+            176 STORE_FAST               0 (batch_op)
+
+ 53         178 LOAD_FAST                0 (batch_op)
+            180 LOAD_ATTR                9 (NULL|self + drop_constraint)
+            200 LOAD_CONST               6 ('ck_participants_status_valid')
+            202 LOAD_CONST               7 ('check')
+            204 KW_NAMES                 8 (('type_',))
+            206 CALL                     2
+            214 POP_TOP
+
+ 52         216 LOAD_CONST               2 (None)
+            218 LOAD_CONST               2 (None)
+            220 LOAD_CONST               2 (None)
+            222 CALL                     2
+            230 POP_TOP
+
+ 55     >>  232 LOAD_GLOBAL              1 (NULL + op)
+            242 LOAD_ATTR                2 (batch_alter_table)
+            262 LOAD_CONST               9 ('trials')
+            264 LOAD_CONST               2 (None)
+            266 KW_NAMES                 3 (('schema',))
+            268 CALL                     2
+            276 BEFORE_WITH
+            278 STORE_FAST               0 (batch_op)
+
+ 56         280 LOAD_FAST                0 (batch_op)
+            282 LOAD_ATTR                9 (NULL|self + drop_constraint)
+            302 LOAD_CONST              10 ('ck_trials_status_valid')
+            304 LOAD_CONST               7 ('check')
+            306 KW_NAMES                 8 (('type_',))
+            308 CALL                     2
+            316 POP_TOP
+
+ 57         318 LOAD_FAST                0 (batch_op)
+            320 LOAD_ATTR                5 (NULL|self + drop_index)
+            340 LOAD_FAST                0 (batch_op)
+            342 LOAD_ATTR                7 (NULL|self + f)
+            362 LOAD_CONST              11 ('ix_trials_status')
+            364 CALL                     1
+            372 CALL                     1
+            380 POP_TOP
+
+ 55         382 LOAD_CONST               2 (None)
+            384 LOAD_CONST               2 (None)
+            386 LOAD_CONST               2 (None)
+            388 CALL                     2
+            396 POP_TOP
+
+ 59     >>  398 LOAD_GLOBAL              1 (NULL + op)
+            408 LOAD_ATTR                2 (batch_alter_table)
+            428 LOAD_CONST              12 ('users')
+            430 LOAD_CONST               2 (None)
+            432 KW_NAMES                 3 (('schema',))
+            434 CALL                     2
+            442 BEFORE_WITH
+            444 STORE_FAST               0 (batch_op)
+
+ 60         446 LOAD_FAST                0 (batch_op)
+            448 LOAD_ATTR                5 (NULL|self + drop_index)
+            468 LOAD_FAST                0 (batch_op)
+            470 LOAD_ATTR                7 (NULL|self + f)
+            490 LOAD_CONST              13 ('ix_users_is_active')
+            492 CALL                     1
+            500 CALL                     1
+            508 POP_TOP
+
+ 59         510 LOAD_CONST               2 (None)
+            512 LOAD_CONST               2 (None)
+            514 LOAD_CONST               2 (None)
+            516 CALL                     2
+            524 POP_TOP
+            526 RETURN_CONST             2 (None)
+
+ 49     >>  528 PUSH_EXC_INFO
+            530 WITH_EXCEPT_START
+            532 POP_JUMP_IF_TRUE         1 (to 536)
+            534 RERAISE                  2
+        >>  536 POP_TOP
+            538 POP_EXCEPT
+            540 POP_TOP
+            542 POP_TOP
+            544 JUMP_BACKWARD          208 (to 130)
+        >>  546 COPY                     3
+            548 POP_EXCEPT
+            550 RERAISE                  1
+
+ 52     >>  552 PUSH_EXC_INFO
+            554 WITH_EXCEPT_START
+            556 POP_JUMP_IF_TRUE         1 (to 560)
+            558 RERAISE                  2
+        >>  560 POP_TOP
+            562 POP_EXCEPT
+            564 POP_TOP
+            566 POP_TOP
+            568 JUMP_BACKWARD          169 (to 232)
+        >>  570 COPY                     3
+            572 POP_EXCEPT
+            574 RERAISE                  1
+
+ 55     >>  576 PUSH_EXC_INFO
+            578 WITH_EXCEPT_START
+            580 POP_JUMP_IF_TRUE         1 (to 584)
+            582 RERAISE                  2
+        >>  584 POP_TOP
+            586 POP_EXCEPT
+            588 POP_TOP
+            590 POP_TOP
+            592 JUMP_BACKWARD           98 (to 398)
+        >>  594 COPY                     3
+            596 POP_EXCEPT
+            598 RERAISE                  1
+
+ 59     >>  600 PUSH_EXC_INFO
+            602 WITH_EXCEPT_START
+            604 POP_JUMP_IF_TRUE         1 (to 608)
+            606 RERAISE                  2
+        >>  608 POP_TOP
+            610 POP_EXCEPT
+            612 POP_TOP
+            614 POP_TOP
+            616 RETURN_CONST             2 (None)
+        >>  618 COPY                     3
+            620 POP_EXCEPT
+            622 RERAISE                  1
+ExceptionTable:
+  48 to 112 -> 528 [1] lasti
+  176 to 214 -> 552 [1] lasti
+  278 to 380 -> 576 [1] lasti
+  444 to 508 -> 600 [1] lasti
+  528 to 536 -> 546 [3] lasti
+  552 to 560 -> 570 [3] lasti
+  576 to 584 -> 594 [3] lasti
+  600 to 608 -> 618 [3] lasti

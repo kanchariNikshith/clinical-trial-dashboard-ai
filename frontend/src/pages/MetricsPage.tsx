@@ -11,7 +11,7 @@ const statusColors: Record<string, string> = {
 };
 
 export const MetricsPage: React.FC = () => {
-  const token = useMemo(() => localStorage.getItem('access_token'), []);
+  const token = useMemo(() => api.getAccessToken(), []);
   const [trials, setTrials] = useState<Trial[]>([]);
   const [selectedTrialId, setSelectedTrialId] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<TrialMetricsResponse | null>(null);

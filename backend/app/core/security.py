@@ -1,6 +1,8 @@
 """Security, password hashing, and JWT token handling."""
 
+import hashlib
 import re
+import secrets
 import bcrypt
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any
@@ -47,6 +49,16 @@ def validate_password_strength(password: str) -> Optional[str]:
 def normalize_email(email: str) -> str:
     """Normalize email address to lowercase and trimmed string."""
     return email.strip().lower()
+
+
+def generate_refresh_token() -> str:
+    """Create a cryptographically random refresh token value."""
+    return secrets.token_urlsafe(32)
+
+
+def hash_refresh_token(token: str) -> str:
+    """Hash a refresh token value before storing it in the database."""
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
 def create_access_token(

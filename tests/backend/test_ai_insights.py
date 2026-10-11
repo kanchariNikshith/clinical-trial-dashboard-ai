@@ -85,7 +85,7 @@ async def test_ai_analysis_requires_trial_ownership(async_client: AsyncClient) -
 @pytest.mark.asyncio
 async def test_ai_analysis_missing_config_returns_service_unavailable(async_client: AsyncClient, monkeypatch) -> None:
     headers, trial_id = await _create_user_and_trial(async_client, "ai-missing@example.com", "AI-MISS")
-    monkeypatch.setattr("backend.app.core.config.settings.GEMINI_API_KEY", "")
+    monkeypatch.setattr("backend.app.services.gemini_service.app_config.settings.GEMINI_API_KEY", "")
 
     response = await async_client.post(
         f"/api/trials/{trial_id}/ai-analysis",

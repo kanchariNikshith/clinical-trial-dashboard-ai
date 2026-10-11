@@ -1,12 +1,56 @@
 """Comprehensive test suite for Authentication and User Registration."""
 
 import pytest
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from httpx import AsyncClient
 from sqlalchemy.orm import Session
 from backend.app.models.user import User
 from backend.app.models.audit_event import AuditEvent
-from backend.app.core.security import create_access_token
+from backend.app.models.refresh_token import RefreshToken
+from backend.app.core.config import Settings
+from backend.app.core.security import create_access_token, generate_refresh_token, hash_refresh_token
+from backend.app.services.auth_service import issue_refresh_session, rotate_refresh_session
+
+
+def test_testing_settings_require_postgres() -> None:
+    """Testing configuration must reject the SQLite fallback and require an explicit PostgreSQL URL."""
+    with pytest.raises(ValueError, match="PostgreSQL|Postgres|TEST_DATABASE_URL"):
+        Settings(APP_ENV="testing", TEST_DATABASE_URL="sqlite:///./test_clinical.db")
+
+
+@pytest.mark.asyncio
+async def test_refresh_session_rejects_reused_family_tokens(async_client: AsyncClient, db_session: Session) -> None:
+    """A refresh token replay should invalidate the remaining active tokens from that rotation family."""
+    user = User(email="family_user@trialops.org", password_hash="fakehash", is_active=True)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+
+    token_a = issue_refresh_session(db_session, user)
+    original_family_id = (
+        db_session.query(RefreshToken)
+        .filter(RefreshToken.token_hash == hash_refresh_token(token_a))
+        .one()
+        .family_id
+    )
+
+    token_b = generate_refresh_token()
+    db_session.add(
+        RefreshToken(
+            user_id=user.id,
+            token_hash=hash_refresh_token(token_b),
+            family_id=original_family_id,
+            created_at=datetime.now(timezone.utc),
+            expires_at=datetime.now(timezone.utc) + timedelta(days=7),
+            last_used_at=datetime.now(timezone.utc),
+        )
+    )
+    db_session.commit()
+
+    rotate_refresh_session(db_session, token_a)
+
+    with pytest.raises(Exception):
+        rotate_refresh_session(db_session, token_b)
 
 
 @pytest.mark.asyncio
@@ -136,6 +180,35 @@ async def test_login_nonexistent_account(async_client: AsyncClient) -> None:
     )
     assert response.status_code == 401
     assert "Invalid email or password" in response.text
+
+
+@pytest.mark.asyncio
+async def test_refresh_cookie_issues_new_access_token(async_client: AsyncClient) -> None:
+    """A valid refresh cookie rotates the session without requiring a new login."""
+    reg = await async_client.post(
+        "/api/auth/register",
+        json={"email": "refresh_user@trialops.org", "password": "Password123!"},
+    )
+    assert reg.status_code == 201
+
+    login = await async_client.post(
+        "/api/auth/login",
+        json={"email": "refresh_user@trialops.org", "password": "Password123!"},
+    )
+    assert login.status_code == 200
+
+    refresh_cookie = login.cookies.get("refresh_token")
+    assert refresh_cookie, "login response did not include a refresh cookie"
+
+    response = await async_client.post(
+        "/api/auth/refresh",
+        cookies={"refresh_token": refresh_cookie},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["user"]["email"] == "refresh_user@trialops.org"
+    assert "refresh_token" in response.headers.get("set-cookie", "").lower()
 
 
 @pytest.mark.asyncio

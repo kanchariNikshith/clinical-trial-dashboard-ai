@@ -2,6 +2,7 @@ import type { HealthResponse } from '../types';
 import type {
   AIInsightResponse,
   AuthTokenResponse,
+  AuthUser,
   Trial,
   TrialListResponse,
   TrialMetricsResponse,
@@ -25,6 +26,30 @@ export interface CsvPreviewResponse {
   preview: CsvPreviewRow[];
 }
 
+export interface DatasetProfile {
+  file_name: string;
+  row_count: number;
+  column_count: number;
+  original_headers: string[];
+  normalized_headers: string[];
+  inferred_types: Record<string, string>;
+  missing_counts: Record<string, number>;
+  samples: Record<string, string[]>;
+}
+
+export interface DatasetClassification {
+  type: string;
+  confidence: number;
+  evidence: string[];
+  proposed_mappings: Record<string, string[]>;
+}
+
+export interface DatasetPreviewResponse {
+  profile: DatasetProfile;
+  classification: DatasetClassification;
+  participant_preview?: CsvPreviewResponse | null;
+}
+
 export interface CsvImportResponse {
   trial_id: string;
   imported_count: number;
@@ -37,6 +62,35 @@ export interface CsvImportResponse {
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+let accessToken: string | null = null;
+let currentUser: AuthUser | null = null;
+let refreshPromise: Promise<string> | null = null;
+
+export function setAccessToken(token: string | null): void {
+  accessToken = token;
+  if (!token) {
+    currentUser = null;
+  }
+}
+
+export function setCurrentUser(user: AuthUser | null): void {
+  currentUser = user;
+}
+
+export function getAccessToken(): string | null {
+  return accessToken;
+}
+
+export function getCurrentUser(): AuthUser | null {
+  return currentUser;
+}
+
+export function clearSession(): void {
+  accessToken = null;
+  currentUser = null;
+  refreshPromise = null;
+}
 
 export class ApiClientError extends Error {
   code: string;
@@ -92,62 +146,142 @@ function normalizeApiError(errorData: unknown, status: number, statusText: strin
   return { message, code, details };
 }
 
+async function refreshAccessToken(): Promise<string> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!response.ok) {
+        let errorData: unknown = null;
+        try {
+          errorData = await response.json();
+        } catch {
+          // Non-json response
+        }
+
+        const { message } = normalizeApiError(errorData, response.status, response.statusText);
+        throw new ApiClientError(message, `HTTP_${response.status}`);
+      }
+
+      const data = (await response.json()) as AuthTokenResponse;
+      setAccessToken(data.access_token);
+      setCurrentUser(data.user);
+      return data.access_token;
+    })();
+  }
+
+  try {
+    return await refreshPromise;
+  } finally {
+    refreshPromise = null;
+  }
+}
+
 export async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit & { __retry?: boolean } = {}
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
-  const defaultHeaders: Record<string, string> = {
-    Accept: 'application/json',
-  };
+  const executeRequest = async (isRetry: boolean): Promise<T> => {
+    const defaultHeaders: Record<string, string> = {
+      Accept: 'application/json',
+    };
 
-  if (!(options.body instanceof FormData)) {
-    defaultHeaders['Content-Type'] = 'application/json';
-  }
-
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    defaultHeaders['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-  });
-
-  if (!response.ok) {
-    let errorData: unknown = null;
-    try {
-      errorData = await response.json();
-    } catch {
-      // Non-json response
+    if (!(options.body instanceof FormData)) {
+      defaultHeaders['Content-Type'] = 'application/json';
     }
 
-    const { message, code, details } = normalizeApiError(errorData, response.status, response.statusText);
-    throw new ApiClientError(message, code, details);
-  }
+    const headerEntries = new Headers(options.headers ?? undefined);
+    const hasAuthorizationHeader =
+      headerEntries.has('Authorization') ||
+      Array.isArray(options.headers) && options.headers.some(([key]) => key.toLowerCase() === 'authorization');
 
-  return response.json();
+    if (accessToken && !hasAuthorizationHeader) {
+      defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const mergedHeaders = new Headers(defaultHeaders);
+    if (options.headers) {
+      const providedHeaders = new Headers(options.headers);
+      for (const [key, value] of providedHeaders.entries()) {
+        mergedHeaders.set(key, value);
+      }
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      credentials: 'include',
+      headers: mergedHeaders,
+    });
+
+    const canRefresh =
+      !isRetry &&
+      !endpoint.includes('/api/auth/login') &&
+      !endpoint.includes('/api/auth/register') &&
+      !endpoint.includes('/api/auth/refresh');
+
+    if (response.status === 401 && canRefresh) {
+      try {
+        await refreshAccessToken();
+        return executeRequest(true);
+      } catch {
+        clearSession();
+        throw new ApiClientError('Your session expired. Please sign in again.', 'HTTP_401');
+      }
+    }
+
+    if (!response.ok) {
+      let errorData: unknown = null;
+      try {
+        errorData = await response.json();
+      } catch {
+        // Non-json response
+      }
+
+      const { message, code, details } = normalizeApiError(errorData, response.status, response.statusText);
+      throw new ApiClientError(message, code, details);
+    }
+
+    return response.json();
+  };
+
+  return executeRequest(Boolean(options.__retry));
 }
 
 export const api = {
   getHealth: (): Promise<HealthResponse> => apiRequest<HealthResponse>('/health'),
   getApiHealth: (): Promise<HealthResponse> => apiRequest<HealthResponse>('/api/health'),
   getRootStatus: (): Promise<{ app: string; status: string }> => apiRequest('/'),
-  register: (email: string, password: string): Promise<AuthTokenResponse> =>
-    apiRequest<AuthTokenResponse>('/api/auth/register', {
+  register: async (email: string, password: string): Promise<AuthTokenResponse> => {
+    const response = await apiRequest<AuthTokenResponse>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
-    }),
-  login: (email: string, password: string): Promise<AuthTokenResponse> =>
-    apiRequest<AuthTokenResponse>('/api/auth/login', {
+    });
+    setAccessToken(response.access_token);
+    setCurrentUser(response.user);
+    return response;
+  },
+  login: async (email: string, password: string): Promise<AuthTokenResponse> => {
+    const response = await apiRequest<AuthTokenResponse>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
-    }),
+    });
+    setAccessToken(response.access_token);
+    setCurrentUser(response.user);
+    return response;
+  },
+  logout: async (): Promise<void> => {
+    try {
+      await apiRequest('/api/auth/logout', { method: 'POST' });
+    } finally {
+      clearSession();
+    }
+  },
   getTrials: (token?: string): Promise<TrialListResponse> =>
     apiRequest<TrialListResponse>('/api/trials', {
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -178,6 +312,15 @@ export const api = {
       body: formData,
     });
   },
+  previewDataset: (trialId: string, file: File): Promise<DatasetPreviewResponse> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return apiRequest<DatasetPreviewResponse>(`/api/trials/${trialId}/datasets/preview`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
   importParticipants: (trialId: string, file: File, confirmed = true): Promise<CsvImportResponse> => {
     const formData = new FormData();
     formData.append('file', file);
@@ -202,4 +345,9 @@ export const api = {
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body: JSON.stringify({ topic }),
     }),
+  getAccessToken,
+  getCurrentUser,
+  setAccessToken,
+  setCurrentUser,
+  clearSession,
 };

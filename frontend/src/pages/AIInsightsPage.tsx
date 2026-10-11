@@ -21,7 +21,7 @@ export function AIInsightsPage() {
 
   useEffect(() => {
     const loadTrials = async () => {
-      const token = localStorage.getItem('access_token');
+      const token = api.getAccessToken();
       if (!token) {
         setTrials([]);
         setSelectedTrialId('');
@@ -47,7 +47,7 @@ export function AIInsightsPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const token = localStorage.getItem('access_token');
+    const token = api.getAccessToken();
 
     if (!selectedTrialId || !token) {
       setError('Please sign in and choose a trial before generating an insight.');
