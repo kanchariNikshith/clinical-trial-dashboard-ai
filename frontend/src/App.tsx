@@ -5,6 +5,7 @@ import { StatusPage } from './pages/StatusPage';
 import { TrialsPage } from './pages/TrialsPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { ImportPage } from './pages/ImportPage';
+import { MetricsPage } from './pages/MetricsPage';
 
 export const App: React.FC = () => {
   return (
@@ -17,22 +18,7 @@ export const App: React.FC = () => {
 
           <Route path="import" element={<ImportPage />} />
 
-          <Route
-            path="dashboard"
-            element={
-              <PlaceholderPage
-                title="Deterministic Metrics & Visualizations"
-                description="Server-computed trial status rates, enrollment charts, and data quality indicators."
-                phase="Phase 4"
-                acceptanceCriteria={[
-                  'AC-030: Exact calculation matching fixture (120 participants -> 79.17% completion, 12.50% withdrawal, 8.33% active).',
-                  'AC-031: All counts and rates calculated deterministically in backend Python code.',
-                  'AC-032: Empty trials show clean zero states without divide-by-zero errors.',
-                  'AC-033: Data quality warning appears if status counts do not reconcile.',
-                ]}
-              />
-            }
-          />
+          <Route path="dashboard" element={<MetricsPage />} />
 
           <Route
             path="ai-insights"

@@ -19,8 +19,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_db():
-    """Create all tables before test session and drop them after."""
-    Base.metadata.drop_all(bind=test_engine)
+    """Create the schema once for the session and drop it after all tests."""
     Base.metadata.create_all(bind=test_engine)
     yield
     Base.metadata.drop_all(bind=test_engine)
@@ -28,13 +27,19 @@ def setup_test_db():
 
 @pytest.fixture
 def db_session() -> Generator[Session, None, None]:
-    """Provide a transactional session per test, rolling back changes after test."""
-    session = TestingSessionLocal()
+    """Provide a transaction-scoped SQLite session for each test without rebuilding tables."""
+    connection = test_engine.connect()
+    connection.begin()
+    session_factory = sessionmaker(bind=connection, autocommit=False, autoflush=False)
+    session = session_factory()
     try:
         yield session
     finally:
         session.rollback()
         session.close()
+        if connection.in_transaction():
+            connection.rollback()
+        connection.close()
 
 
 @pytest.fixture

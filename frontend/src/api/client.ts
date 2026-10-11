@@ -1,5 +1,10 @@
 import type { HealthResponse, ApiErrorResponse } from '../types';
-import type { AuthTokenResponse, Trial, TrialListResponse } from '../types/trials';
+import type {
+  AuthTokenResponse,
+  Trial,
+  TrialListResponse,
+  TrialMetricsResponse,
+} from '../types/trials';
 
 export interface CsvPreviewRow {
   participant_id: string;
@@ -145,4 +150,8 @@ export const api = {
       body: formData,
     });
   },
+  getTrialMetrics: (trialId: string, token?: string): Promise<TrialMetricsResponse> =>
+    apiRequest<TrialMetricsResponse>(`/api/trials/${trialId}/metrics`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }),
 };

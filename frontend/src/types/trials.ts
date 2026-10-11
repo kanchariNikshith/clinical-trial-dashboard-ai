@@ -28,3 +28,35 @@ export interface AuthTokenResponse {
   token_type: string;
   user: AuthUser;
 }
+
+export interface StatusBreakdownItem {
+  status: string;
+  label: string;
+  count: number;
+  rate: number;
+  summary: string;
+}
+
+export interface MetricDataQuality {
+  status_counts_reconcile: boolean;
+  warning?: string | null;
+  unsupported_statuses: string[];
+}
+
+export interface TrialMetricsResponse {
+  trial_id: string;
+  total_participants: number;
+  completed_count: number;
+  withdrawn_count: number;
+  active_count: number;
+  completion_rate: number;
+  withdrawal_rate: number;
+  active_rate: number;
+  calculation_method: string;
+  empty_trial: boolean;
+  ai_generated: boolean;
+  data_quality: MetricDataQuality;
+  definitions: Record<string, string>;
+  status_breakdown: StatusBreakdownItem[];
+  summary: string;
+}

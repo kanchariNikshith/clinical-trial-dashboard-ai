@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from backend.app.db.session import get_db
 from backend.app.models.trial import Trial
 from backend.app.models.user import User
+from backend.app.schemas.metrics import TrialMetricsResponse
 from backend.app.schemas.participant import (
     ParticipantImportResponse,
     ParticipantPreviewResponse,
@@ -16,6 +17,7 @@ from backend.app.schemas.trial import (
     TrialResponse,
     TrialListResponse,
 )
+from backend.app.services.metrics_service import get_trial_metrics
 from backend.app.services.participant_service import import_participants, preview_participants
 from backend.app.services.trial_service import (
     create_trial,
@@ -103,6 +105,22 @@ def update_trial_endpoint(
     """
     trial = update_trial(db=db, trial_id=trial_id, owner=current_user, payload=payload)
     return TrialResponse.from_orm_with_count(trial)
+
+
+@router.get(
+    "/{trial_id}/metrics",
+    response_model=TrialMetricsResponse,
+    summary="Return deterministic trial metrics and data-quality diagnostics",
+)
+def get_trial_metrics_endpoint(
+    trial_id: str,
+    current_user: User = Depends(get_current_user),
+    trial: Trial = Depends(require_trial_ownership),
+    db: Session = Depends(get_db),
+) -> TrialMetricsResponse:
+    """Return aggregated participant metrics for a trial. The calculation is backend-generated only."""
+    metrics = get_trial_metrics(db=db, trial_id=trial_id)
+    return TrialMetricsResponse(**metrics)
 
 
 @router.post(
