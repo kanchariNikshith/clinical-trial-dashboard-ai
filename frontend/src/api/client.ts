@@ -1,4 +1,4 @@
-import type { HealthResponse, ApiErrorResponse } from '../types';
+import type { HealthResponse } from '../types';
 import type {
   AIInsightResponse,
   AuthTokenResponse,
@@ -50,6 +50,48 @@ export class ApiClientError extends Error {
   }
 }
 
+function normalizeApiError(errorData: unknown, status: number, statusText: string): {
+  message: string;
+  code: string;
+  details: string[];
+} {
+  const fallback = {
+    message: `Request failed with status ${status} (${statusText})`,
+    code: `HTTP_${status}`,
+    details: [] as string[],
+  };
+
+  if (!errorData || typeof errorData !== 'object') {
+    return fallback;
+  }
+
+  const candidate =
+    'error' in errorData && errorData.error && typeof errorData.error === 'object'
+      ? errorData.error
+      : 'detail' in errorData && errorData.detail && typeof errorData.detail === 'object'
+        ? errorData.detail
+        : errorData;
+
+  if (!candidate || typeof candidate !== 'object') {
+    return fallback;
+  }
+
+  const payload = candidate as Record<string, unknown>;
+  const message =
+    typeof payload.message === 'string'
+      ? payload.message
+      : typeof payload.error === 'string'
+        ? payload.error
+        : fallback.message;
+  const code = typeof payload.code === 'string' ? payload.code : fallback.code;
+  const details =
+    Array.isArray(payload.details) && payload.details.every((item) => typeof item === 'string')
+      ? payload.details
+      : [];
+
+  return { message, code, details };
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -78,19 +120,14 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    let errorData: ApiErrorResponse | null = null;
+    let errorData: unknown = null;
     try {
       errorData = await response.json();
     } catch {
       // Non-json response
     }
 
-    const message =
-      errorData?.error?.message ||
-      `Request failed with status ${response.status} (${response.statusText})`;
-    const code = errorData?.error?.code || `HTTP_${response.status}`;
-    const details = errorData?.error?.details || [];
-
+    const { message, code, details } = normalizeApiError(errorData, response.status, response.statusText);
     throw new ApiClientError(message, code, details);
   }
 

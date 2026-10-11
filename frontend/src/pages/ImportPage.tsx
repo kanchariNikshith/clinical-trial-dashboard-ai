@@ -84,10 +84,14 @@ export const ImportPage: React.FC = () => {
       if (typed.code === 'HTTP_401' || typed.message.toLowerCase().includes('expired')) {
         localStorage.removeItem('access_token');
         setError('Your session expired. Please sign in again.');
+        setValidationErrors([]);
+        setSummary({ total_rows: 0, valid_rows: 0, invalid_rows: 0 });
+        setPreviewRows([]);
         return;
       }
       setError(typed.message || 'The CSV could not be validated.');
       setValidationErrors(typed.details || []);
+      setSummary({ total_rows: 0, valid_rows: 0, invalid_rows: 0 });
       setPreviewRows([]);
     } finally {
       setIsPreviewing(false);
@@ -125,10 +129,15 @@ export const ImportPage: React.FC = () => {
       if (typed.code === 'HTTP_401' || typed.message.toLowerCase().includes('expired')) {
         localStorage.removeItem('access_token');
         setError('Your session expired. Please sign in again.');
+        setValidationErrors([]);
+        setSummary({ total_rows: 0, valid_rows: 0, invalid_rows: 0 });
+        setPreviewRows([]);
         return;
       }
       setError(typed.message || 'The import failed and no partial records were saved.');
       setValidationErrors(typed.details || []);
+      setSummary({ total_rows: 0, valid_rows: 0, invalid_rows: 0 });
+      setPreviewRows([]);
     } finally {
       setIsImporting(false);
     }
@@ -220,9 +229,18 @@ export const ImportPage: React.FC = () => {
         </div>
 
         {error ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', padding: '0.8rem 1rem' }}>
-            <ShieldAlert size={18} />
-            <span>{error}</span>
+          <div style={{ display: 'grid', gap: '0.65rem', color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', padding: '0.8rem 1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ShieldAlert size={18} />
+              <span>{error}</span>
+            </div>
+            {validationErrors.length > 0 ? (
+              <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#991b1b', display: 'grid', gap: '0.25rem' }}>
+                {validationErrors.map((issue) => (
+                  <li key={issue}>{issue}</li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         ) : null}
 

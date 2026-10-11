@@ -25,6 +25,23 @@ OPTIONAL_COLUMNS = (
     "last_visit_date",
     "next_visit_due_date",
 )
+TRIAL_LEVEL_HINT_HEADERS = {
+    "nct_number",
+    "nctid",
+    "nct_id",
+    "title",
+    "brief_title",
+    "official_title",
+    "study_title",
+    "overall_status",
+    "study_type",
+    "phase",
+    "condition",
+    "conditions",
+    "primary_completion_date",
+    "completion_date",
+    "study_results",
+}
 
 
 def _normalize_header(value: str | None) -> str:
@@ -132,12 +149,27 @@ def _validate_and_preview_csv(file: UploadFile, db: Session, trial_id: str) -> d
 
     missing = [column for column in REQUIRED_COLUMNS if _normalize_header(column) not in normalized_header]
     if missing:
+        trial_level_hint = bool({key for key in normalized_header if key in TRIAL_LEVEL_HINT_HEADERS})
+        if trial_level_hint:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail={
+                    "code": "VALIDATION_ERROR",
+                    "message": "This CSV does not match the participant import format.",
+                    "details": [
+                        "Expected participant CSV columns: participant_id, status.",
+                        "Optional participant columns: visits_completed, visits_planned, enrollment_date, last_visit_date, next_visit_due_date.",
+                        "This looks like a trial-level study export (for example: NCT Number, Title, Status) rather than participant-level data.",
+                        "Please upload a participant roster for this trial, not a clinical-study registry export.",
+                    ],
+                },
+            )
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail={
                 "code": "VALIDATION_ERROR",
                 "message": "CSV file is missing required columns.",
-                "details": [f"Missing required column(s): {', '.join(missing)}."],
+                "details": [f"Missing required column(s): {', '.join(missing)}.", "Expected participant CSV columns: participant_id, status.", "Optional participant columns: visits_completed, visits_planned, enrollment_date, last_visit_date, next_visit_due_date."],
             },
         )
 

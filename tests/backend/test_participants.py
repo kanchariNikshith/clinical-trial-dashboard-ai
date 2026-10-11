@@ -94,6 +94,7 @@ SYN-001,3
 
     assert response.status_code == 422
     assert "required columns" in response.json()["error"]["message"].lower()
+    assert "participant_id" in "\n".join(response.json()["error"]["details"]).lower()
 
     malformed = await async_client.post(
         f"/api/trials/{trial_id}/participants/preview",
@@ -102,6 +103,30 @@ SYN-001,3
     )
     assert malformed.status_code == 200
     assert malformed.json()["invalid_rows"] >= 1
+
+
+@pytest.mark.asyncio
+async def test_preview_rejects_trial_level_csv_with_clear_participant_format_message(async_client: AsyncClient) -> None:
+    headers, trial_id = await create_user_and_trial(async_client, "phase3_study_csv@trialops.org", "TRIAL-STUDY")
+    csv_body = """NCT Number,Title,Status,Phase,Study Type
+NCT0001,COVID vaccine trial,Completed,Phase 3,Interventional
+NCT0002,Masking study,Active,Phase 2,Interventional
+"""
+
+    response = await async_client.post(
+        f"/api/trials/{trial_id}/participants/preview",
+        headers=headers,
+        files={"file": ("COVID clinical trials.csv", csv_body, "text/csv")},
+    )
+
+    assert response.status_code == 422, response.text
+    payload = response.json()["error"]
+    message = payload["message"].lower()
+    details = "\n".join(payload["details"]).lower()
+    assert "participant import format" in message or "participant csv" in message
+    assert "participant_id" in details
+    assert "status" in details
+    assert "trial-level study export" in details or "participant roster" in details
 
 
 @pytest.mark.asyncio
