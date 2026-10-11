@@ -6,6 +6,7 @@ import { TrialsPage } from './pages/TrialsPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { ImportPage } from './pages/ImportPage';
 import { MetricsPage } from './pages/MetricsPage';
+import { AIInsightsPage } from './pages/AIInsightsPage';
 
 export const App: React.FC = () => {
   return (
@@ -20,23 +21,7 @@ export const App: React.FC = () => {
 
           <Route path="dashboard" element={<MetricsPage />} />
 
-          <Route
-            path="ai-insights"
-            element={
-              <PlaceholderPage
-                title="Google Gemini AI Advisory Insights"
-                description="Aggregate-only AI narrative analysis with strict safety boundaries and provider timeout safeguards."
-                phase="Phase 5"
-                acceptanceCriteria={[
-                  'AC-040: AI prompt sends only aggregated metrics; zero participant rows or identifiers.',
-                  'AC-041: Dashboard and metrics remain functional if Gemini API key is missing or fails.',
-                  'AC-042: AI narrative is labeled as advisory and requiring human verification.',
-                  'AC-043: Model never invents completion dates or claims clinical efficacy/safety.',
-                  'AC-044: Provider timeouts/errors do not expose credentials or stack traces.',
-                ]}
-              />
-            }
-          />
+          <Route path="ai-insights" element={<AIInsightsPage />} />
 
           <Route
             path="reports"

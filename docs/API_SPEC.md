@@ -86,7 +86,13 @@ Values above are synthetic examples. The API must compute the values from persis
 
 ## AI insights
 ### `POST /api/trials/{trial_id}/ai-analysis`
-Use POST because the operation invokes an external provider and may be audited. Request may contain a narrowly defined analysis question, but the backend must not accept arbitrary raw participant data for the prompt. Backend computes metrics and constructs the AI input.
+Use POST because the operation invokes an external provider and may be audited. The request accepts a validated topic from an allowlist (for example: `enrollment`, `completion`, `withdrawals`, `participant_status_distribution`). The backend maps each topic to a fixed analysis prompt and never passes raw user text or participant details to Gemini.
+Example request:
+```json
+{
+  "topic": "enrollment"
+}
+```
 Example response:
 ```json
 {

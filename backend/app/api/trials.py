@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from backend.app.db.session import get_db
 from backend.app.models.trial import Trial
 from backend.app.models.user import User
+from backend.app.schemas.ai import AIAnalysisRequest, AIAnalysisResponse
 from backend.app.schemas.metrics import TrialMetricsResponse
 from backend.app.schemas.participant import (
     ParticipantImportResponse,
@@ -17,6 +18,8 @@ from backend.app.schemas.trial import (
     TrialResponse,
     TrialListResponse,
 )
+from backend.app.services import gemini_service
+from backend.app.services.audit_service import ACTION_AI_ANALYSIS, record_audit_event
 from backend.app.services.metrics_service import get_trial_metrics
 from backend.app.services.participant_service import import_participants, preview_participants
 from backend.app.services.trial_service import (
@@ -121,6 +124,202 @@ def get_trial_metrics_endpoint(
     """Return aggregated participant metrics for a trial. The calculation is backend-generated only."""
     metrics = get_trial_metrics(db=db, trial_id=trial_id)
     return TrialMetricsResponse(**metrics)
+
+
+@router.post(
+    "/{trial_id}/ai-analysis",
+    response_model=AIAnalysisResponse,
+    summary="Generate an aggregate-only AI summary for a trial",
+)
+async def generate_trial_ai_analysis_endpoint(
+    trial_id: str,
+    payload: AIAnalysisRequest,
+    current_user: User = Depends(get_current_user),
+    trial: Trial = Depends(require_trial_ownership),
+    db: Session = Depends(get_db),
+) -> AIAnalysisResponse:
+    """Generate a short advisory AI summary using only aggregate metrics and a sanitized prompt."""
+    metrics = get_trial_metrics(db=db, trial_id=trial_id)
+    prompt = gemini_service.build_ai_prompt(metrics=metrics, topic=payload.topic)
+
+    try:
+        result = await gemini_service.generate_ai_insight(prompt)
+    except gemini_service.GeminiConfigurationError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_SERVICE_UNAVAILABLE", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "code": "AI_SERVICE_UNAVAILABLE",
+                "message": "AI insight service is unavailable because the Gemini API key is not configured.",
+                "details": ["Set GEMINI_API_KEY in the backend environment to enable AI insights."],
+            },
+        ) from exc
+    except gemini_service.GeminiTimeoutError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_SERVICE_TIMEOUT", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail={
+                "code": "AI_SERVICE_TIMEOUT",
+                "message": "The AI insight request hit a timeout while generating the summary.",
+                "details": ["Please try again after a short delay."],
+            },
+        ) from exc
+    except gemini_service.GeminiRateLimitError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_RATE_LIMITED", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "code": "AI_RATE_LIMITED",
+                "message": "The AI service is temporarily rate-limited.",
+                "details": ["Please retry the request shortly."],
+            },
+        ) from exc
+    except gemini_service.GeminiProviderError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_PROVIDER_ERROR", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail={
+                "code": "AI_PROVIDER_ERROR",
+                "message": "The AI provider returned an invalid or unavailable response.",
+                "details": ["Please try again in a moment."],
+            },
+        ) from exc
+    except TimeoutError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_SERVICE_TIMEOUT", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail={
+                "code": "AI_SERVICE_TIMEOUT",
+                "message": "The AI insight request hit a timeout while generating the summary.",
+                "details": ["Please try again after a short delay."],
+            },
+        ) from exc
+    except RuntimeError as exc:
+        if "429" in str(exc) or "rate limit" in str(exc).lower() or "quota" in str(exc).lower():
+            record_audit_event(
+                db=db,
+                action=ACTION_AI_ANALYSIS,
+                entity_type="trial",
+                outcome="error",
+                actor_user_id=current_user.id,
+                entity_id=trial_id,
+                metadata={"error_code": "AI_RATE_LIMITED", "topic": payload.topic.value},
+            )
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail={
+                    "code": "AI_RATE_LIMITED",
+                    "message": "The AI service is temporarily rate-limited.",
+                    "details": ["Please retry the request shortly."],
+                },
+            ) from exc
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_PROVIDER_ERROR", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail={
+                "code": "AI_PROVIDER_ERROR",
+                "message": "The AI provider returned an invalid or unavailable response.",
+                "details": ["Please try again in a moment."],
+            },
+        ) from exc
+    except ValueError as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_PROVIDER_ERROR", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail={
+                "code": "AI_PROVIDER_ERROR",
+                "message": "The AI provider returned an invalid response payload.",
+                "details": ["The AI output could not be validated."],
+            },
+        ) from exc
+
+    try:
+        response = AIAnalysisResponse(**result)
+    except Exception as exc:
+        record_audit_event(
+            db=db,
+            action=ACTION_AI_ANALYSIS,
+            entity_type="trial",
+            outcome="error",
+            actor_user_id=current_user.id,
+            entity_id=trial_id,
+            metadata={"error_code": "AI_RESPONSE_INVALID", "topic": payload.topic.value},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail={
+                "code": "AI_RESPONSE_INVALID",
+                "message": "The AI provider returned an invalid response payload.",
+                "details": ["The output could not be validated."],
+            },
+        ) from exc
+
+    record_audit_event(
+        db=db,
+        action=ACTION_AI_ANALYSIS,
+        entity_type="trial",
+        outcome="success",
+        actor_user_id=current_user.id,
+        entity_id=trial_id,
+        metadata={"model": response.model, "topic": payload.topic.value},
+    )
+    return response
 
 
 @router.post(

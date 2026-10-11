@@ -60,3 +60,10 @@ export interface TrialMetricsResponse {
   status_breakdown: StatusBreakdownItem[];
   summary: string;
 }
+
+export interface AIInsightResponse {
+  analysis: string;
+  model: string;
+  generated_at: string;
+  disclaimer: string;
+}

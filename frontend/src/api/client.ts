@@ -1,5 +1,6 @@
 import type { HealthResponse, ApiErrorResponse } from '../types';
 import type {
+  AIInsightResponse,
   AuthTokenResponse,
   Trial,
   TrialListResponse,
@@ -153,5 +154,15 @@ export const api = {
   getTrialMetrics: (trialId: string, token?: string): Promise<TrialMetricsResponse> =>
     apiRequest<TrialMetricsResponse>(`/api/trials/${trialId}/metrics`, {
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }),
+  generateTrialInsights: (
+    trialId: string,
+    topic: 'enrollment' | 'completion' | 'withdrawals' | 'participant_status_distribution',
+    token?: string
+  ): Promise<AIInsightResponse> =>
+    apiRequest<AIInsightResponse>(`/api/trials/${trialId}/ai-analysis`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: JSON.stringify({ topic }),
     }),
 };
